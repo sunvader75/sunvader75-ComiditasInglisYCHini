@@ -4,18 +4,20 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+
+
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
@@ -56,7 +58,7 @@ fun PreferencesScreen(
                 title = { Text("Gustos de cada Miembro") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
                     }
                 }
             )
@@ -68,66 +70,68 @@ fun PreferencesScreen(
                 .padding(padding)
                 .padding(16.dp)
         ) {
-            if (uiState.members.isEmpty()) {
-                Text(
-                    text = "Primero añade miembros en la sección correspondiente.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                return@Column
-            }
-
-            if (uiState.meals.isEmpty()) {
-                Text(
-                    text = "Primero añade comidas en la sección correspondiente.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                return@Column
-            }
-
-            Text(
-                text = "Selecciona un miembro:",
-                style = MaterialTheme.typography.labelLarge,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(bottom = 16.dp)
-            ) {
-                uiState.members.forEach { member ->
-                    val selected = uiState.selectedMemberId == member.id
-                    FilterChip(
-                        selected = selected,
-                        onClick = { viewModel.selectMember(member.id) },
-                        label = { Text(member.name) },
-                        leadingIcon = {
-                            Box(
-                                modifier = Modifier
-                                    .size(16.dp)
-                                    .clip(CircleShape)
-                                    .background(Color(member.color))
-                            )
-                        }
+            when {
+                uiState.members.isEmpty() -> {
+                    Text(
+                        text = "Primero añade miembros en la sección correspondiente.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-            }
 
-            val selectedMember = uiState.members.find { it.id == uiState.selectedMemberId }
-            if (selectedMember != null) {
-                MemberPreferencesList(
-                    member = selectedMember,
-                    meals = uiState.meals,
-                    viewModel = viewModel
-                )
+                uiState.meals.isEmpty() -> {
+                    Text(
+                        text = "Primero añade comidas en la sección correspondiente.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                else -> {
+                    Text(
+                        text = "Selecciona un miembro:",
+                        style = MaterialTheme.typography.labelLarge,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    ) {
+                        uiState.members.forEach { member ->
+                            val selected = uiState.selectedMemberId == member.id
+                            FilterChip(
+                                selected = selected,
+                                onClick = { viewModel.selectMember(member.id) },
+                                label = { Text(member.name) },
+                                leadingIcon = {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(16.dp)
+                                            .clip(CircleShape)
+                                            .background(Color(member.color))
+                                    )
+                                }
+                            )
+                        }
+                    }
+
+                    val selectedMember = uiState.members.find { it.id == uiState.selectedMemberId }
+                    if (selectedMember != null) {
+                        MemberPreferencesList(
+                            member = selectedMember,
+                            meals = uiState.meals,
+                            viewModel = viewModel
+                        )
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-private fun MemberPreferencesList(
+private fun ColumnScope.MemberPreferencesList(
     member: FamilyMember,
     meals: List<Meal>,
     viewModel: PreferencesViewModel
@@ -147,6 +151,7 @@ private fun MemberPreferencesList(
     )
 
     LazyColumn(
+        modifier = Modifier.weight(1f),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(meals, key = { it.id }) { meal ->

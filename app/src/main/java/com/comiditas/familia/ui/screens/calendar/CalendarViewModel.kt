@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -42,7 +44,18 @@ class CalendarViewModel @Inject constructor(
     private val _selectedDate = MutableStateFlow(LocalDate.now())
     private val _message = MutableStateFlow<String?>(null)
 
-    private val _monthAssignments = MutableStateFlow<Map<LocalDate, List<DayAssignment>>>(emptyMap())
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    private val _monthAssignments: StateFlow<Map<LocalDate, List<DayAssignment>>> = _currentMonth
+        .flatMapLatest { month ->
+            val startDate = month.atDay(1).format(formatter)
+            val endDate = month.atEndOfMonth().format(formatter)
+            assignMealsUseCase.getAssignmentsBetween(startDate, endDate)
+                .map { assignments ->
+                    assignments.groupBy {
+                        LocalDate.parse(it.date, formatter)
+                    }
+                }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyMap())
 
     val uiState: StateFlow<CalendarUiState> = combine(
         _currentMonth,
@@ -60,27 +73,6 @@ class CalendarViewModel @Inject constructor(
             message = assignmentsAndMsg.second
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), CalendarUiState())
-
-    init {
-        viewModelScope.launch {
-            _currentMonth.collect { month ->
-                loadMonthAssignments(month)
-            }
-        }
-    }
-
-    private suspend fun loadMonthAssignments(month: YearMonth) {
-        val startDate = month.atDay(1).format(formatter)
-        val endDate = month.atEndOfMonth().format(formatter)
-
-        assignMealsUseCase.getAssignmentsBetween(startDate, endDate)
-            .collect { assignments ->
-                val map = assignments.groupBy {
-                    LocalDate.parse(it.date, formatter)
-                }
-                _monthAssignments.value = map
-            }
-    }
 
     fun selectDate(date: LocalDate) {
         _selectedDate.value = date
@@ -108,22 +100,18 @@ class CalendarViewModel @Inject constructor(
             } else {
                 "No se pudo asignar. Verifica que haya comidas y gustos configurados."
             }
-            // Recargar asignaciones del mes
-            loadMonthAssignments(_currentMonth.value)
         }
     }
 
     fun assignManually(date: LocalDate, memberId: Long, mealId: Long) {
         viewModelScope.launch {
             assignMealsUseCase.assignManually(date.format(formatter), memberId, mealId)
-            loadMonthAssignments(_currentMonth.value)
         }
     }
 
     fun removeAssignment(date: LocalDate, memberId: Long) {
         viewModelScope.launch {
             assignMealsUseCase.removeAssignment(date.format(formatter), memberId)
-            loadMonthAssignments(_currentMonth.value)
         }
     }
 

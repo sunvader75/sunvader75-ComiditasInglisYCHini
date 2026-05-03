@@ -42,6 +42,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -189,24 +192,38 @@ private fun CalendarGrid(
     selectedDate: LocalDate,
     onDateSelected: (LocalDate) -> Unit
 ) {
-    val firstDayOfMonth = month.atDay(1)
-    val daysInMonth = month.lengthOfMonth()
-    val firstDayOfWeek = firstDayOfMonth.dayOfWeek.value % 7
-    val today = LocalDate.now()
+    val days = remember(month) {
+        val firstDayOfMonth = month.atDay(1)
+        val daysInMonth = month.lengthOfMonth()
+        val firstDayOfWeek = firstDayOfMonth.dayOfWeek.value % 7
+        val offset = if (firstDayOfWeek == 0) 6 else firstDayOfWeek - 1
 
-    val days = mutableListOf<LocalDate?>()
-    val offset = if (firstDayOfWeek == 0) 6 else firstDayOfWeek - 1
-
-    repeat(offset) { days.add(null) }
-    for (day in 1..daysInMonth) {
-        days.add(month.atDay(day))
+        val list = mutableListOf<LocalDate?>()
+        repeat(offset) { list.add(null) }
+        for (day in 1..daysInMonth) {
+            list.add(month.atDay(day))
+        }
+        list
     }
+
+    val today = remember { LocalDate.now() }
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(7),
         modifier = Modifier.fillMaxWidth()
     ) {
-        items(days) { date ->
+        items(
+            count = days.size,
+            key = { index ->
+                val date = days[index]
+                if (date != null) {
+                    date.toString()
+                } else {
+                    "padding-${month.year}-${month.monthValue}-$index"
+                }
+            }
+        ) { index ->
+            val date = days[index]
             if (date != null) {
                 val assignments = monthAssignments[date] ?: emptyList()
                 DayCell(
@@ -292,11 +309,11 @@ private fun DayDetailDialog(
     onManualAssign: (Long, Long) -> Unit,
     onRemoveAssignment: (Long) -> Unit
 ) {
-    val assignmentMap = assignments.associateBy { it.memberId }
-    val mealMap = meals.associateBy { it.id }
+    val assignmentMap = remember(assignments) { assignments.associateBy { it.memberId } }
+    val mealMap = remember(meals) { meals.associateBy { it.id } }
     var showManualAssign by remember { mutableStateOf<Long?>(null) }
 
-    val formatter = DateTimeFormatter.ofPattern("EEEE d 'de' MMMM", Locale("es"))
+    val formatter = remember { DateTimeFormatter.ofPattern("EEEE d 'de' MMMM", Locale("es")) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -312,56 +329,54 @@ private fun DayDetailDialog(
             ) {
                 if (members.isEmpty()) {
                     Text("No hay miembros configurados.")
-                    return@Column
-                }
-
-                if (meals.isEmpty()) {
+                } else if (meals.isEmpty()) {
                     Text("No hay comidas configuradas.")
-                    return@Column
-                }
+                } else {
+                    members.forEach { member ->
+                        key(member.id) {
+                            val assignment = assignmentMap[member.id]
+                            val meal = assignment?.let { mealMap[it.mealId] }
 
-                members.forEach { member ->
-                    val assignment = assignmentMap[member.id]
-                    val meal = assignment?.let { mealMap[it.mealId] }
+                            Card(
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(12.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(12.dp)
+                                            .clip(CircleShape)
+                                            .background(Color(member.color))
+                                    )
+                                    Spacer(modifier = Modifier.size(8.dp))
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            text = member.name,
+                                            style = MaterialTheme.typography.labelMedium
+                                        )
+                                        Text(
+                                            text = meal?.name ?: "Sin asignar",
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = if (meal != null)
+                                                MaterialTheme.colorScheme.onSurface
+                                            else
+                                                MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
 
-                    Card(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(12.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(12.dp)
-                                    .clip(CircleShape)
-                                    .background(Color(member.color))
-                            )
-                            Spacer(modifier = Modifier.size(8.dp))
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = member.name,
-                                    style = MaterialTheme.typography.labelMedium
-                                )
-                                Text(
-                                    text = meal?.name ?: "Sin asignar",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = if (meal != null)
-                                        MaterialTheme.colorScheme.onSurface
-                                    else
-                                        MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-
-                            if (meal != null) {
-                                TextButton(onClick = { onRemoveAssignment(member.id) }) {
-                                    Text("Quitar")
-                                }
-                            } else {
-                                TextButton(onClick = { showManualAssign = member.id }) {
-                                    Text("Asignar")
+                                    if (meal != null) {
+                                        TextButton(onClick = { onRemoveAssignment(member.id) }) {
+                                            Text("Quitar")
+                                        }
+                                    } else {
+                                        TextButton(onClick = { showManualAssign = member.id }) {
+                                            Text("Asignar")
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -407,8 +422,13 @@ private fun ManualAssignDialog(
         onDismissRequest = onDismiss,
         title = { Text("Asignar comida a $memberName") },
         text = {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                items(meals) { meal ->
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                meals.forEach { meal ->
                     TextButton(
                         onClick = { onSelect(meal.id) },
                         modifier = Modifier.fillMaxWidth()

@@ -88,6 +88,7 @@ fun MembersScreen(
             )
 
             LazyColumn(
+                modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(members, key = { it.id }) { member ->
