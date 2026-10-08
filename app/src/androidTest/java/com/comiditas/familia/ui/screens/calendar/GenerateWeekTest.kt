@@ -1,10 +1,15 @@
 package com.comiditas.familia.ui.screens.calendar
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.isDialog
+import androidx.compose.ui.test.onNode
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import androidx.lifecycle.ViewModelStore
 import androidx.room.Room
@@ -51,12 +56,30 @@ class GenerateWeekTest {
             AssignMealsUseCase(repository, members, meals, preferences, MealAssignmentOptimizer()))
         store.put("calendar", viewModel)
         compose.setContent { MaterialTheme { CalendarScreen(viewModel, onBack = {}) } }
-        compose.runOnIdle { viewModel.selectDate(LocalDate.parse("2024-12-30")) }
+        compose.runOnIdle { viewModel.showWeek(LocalDate.parse("2024-12-30")) }
     }
 
     @After fun tearDown() {
         compose.runOnIdle { store.clear() }
         database.close()
+    }
+
+    @Test fun editCloseReopenAndWeekNavigation() {
+        val monday = "Lunes 30/12/2024"
+        compose.onNodeWithText(monday).performClick()
+        compose.waitUntil(5_000) {
+            compose.onAllNodes(androidx.compose.ui.test.hasText("Editor manual"))
+                .fetchSemanticsNodes().isNotEmpty()
+        }
+        compose.onNodeWithText("Cerrar").performClick()
+        compose.onNodeWithText(monday).performClick()
+        compose.onNodeWithText("Editor manual").assertExists()
+        compose.onNodeWithText("Cerrar").performClick()
+        compose.onNodeWithContentDescription("Semana siguiente").performClick()
+        compose.onNodeWithText("06/01/2025 – 12/01/2025").assertExists()
+        compose.onNodeWithContentDescription("Semana anterior").performClick()
+        compose.onNodeWithText(monday).assertExists()
+        runBlocking { assertEquals(listOf(existing), repository.getByDate(existing.date)) }
     }
 
     @Test fun explainedGenerationFailureIsShownWithoutWrites() {
@@ -84,7 +107,9 @@ class GenerateWeekTest {
         compose.onNodeWithText("Reemplazar").assertIsEnabled()
         // The pending target is frozen even if a caller changes the selected day.
         compose.runOnIdle { viewModel.selectDate(LocalDate.parse("2025-02-10")) }
-        compose.onNodeWithText("30/12/2024 – 05/01/2025").assertExists()
+        compose.onNode(
+            hasText("30/12/2024 – 05/01/2025") and hasAnyAncestor(isDialog())
+        ).assertExists()
         compose.onNodeWithText("Generar semana").assertIsNotEnabled()
         compose.onNodeWithText("Cancelar").performClick()
         runBlocking { assertEquals(listOf(existing), repository.getByDate(existing.date)) }

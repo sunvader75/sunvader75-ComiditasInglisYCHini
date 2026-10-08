@@ -19,18 +19,26 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.CancellationException
 import java.time.LocalDate
-import java.time.YearMonth
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 data class CalendarUiState(
-    val currentMonth: YearMonth = YearMonth.now(),
+    val weekStart: LocalDate = WeekMenuPresentation.start(LocalDate.now()),
+    val week: WeekObservation = WeekObservation(),
     val selectedDate: LocalDate = LocalDate.now(),
     val members: List<FamilyMember> = emptyList(),
     val meals: List<Meal> = emptyList(),
-    val monthAssignments: Map<LocalDate, List<DayAssignment>> = emptyMap(),
     val isLoading: Boolean = false,
     val message: String? = null
+)
+
+data class WeekObservation(
+    val start: LocalDate = WeekMenuPresentation.start(LocalDate.now()),
+    val assignments: Map<LocalDate, List<DayAssignment>> = emptyMap(),
+    val loaded: Boolean = false,
+    val error: String? = null
 )
 
 @HiltViewModel
@@ -41,37 +49,40 @@ class CalendarViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val formatter = DateTimeFormatter.ISO_LOCAL_DATE
-    private val _currentMonth = MutableStateFlow(YearMonth.now())
+    private val _weekStart = MutableStateFlow(WeekMenuPresentation.start(LocalDate.now()))
+    private val _retry = MutableStateFlow(0)
     private val _selectedDate = MutableStateFlow(LocalDate.now())
     private val _message = MutableStateFlow<String?>(null)
     private val _isLoading = MutableStateFlow(false)
 
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
-    private val _monthAssignments: StateFlow<Map<LocalDate, List<DayAssignment>>> = _currentMonth
-        .flatMapLatest { month ->
-            val startDate = month.atDay(1).format(formatter)
-            val endDate = month.atEndOfMonth().format(formatter)
-            assignMealsUseCase.getAssignmentsBetween(startDate, endDate)
-                .map { assignments ->
-                    assignments.groupBy {
-                        LocalDate.parse(it.date, formatter)
-                    }
+    private val _week: StateFlow<WeekObservation> = combine(_weekStart, _retry) { start, _ -> start }
+        .flatMapLatest { start ->
+            assignMealsUseCase.getAssignmentsBetween(start.format(formatter), start.plusDays(6).format(formatter))
+                .map { assignments -> WeekObservation(start, assignments.groupBy {
+                    LocalDate.parse(it.date, formatter)
+                }, loaded = true) }
+                .onStart { emit(WeekObservation(start)) }
+                .catch { error ->
+                    if (error is CancellationException) throw error
+                    emit(WeekObservation(start, error = "No se pudo cargar la semana. Inténtalo de nuevo."))
                 }
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyMap())
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), WeekObservation())
 
     val uiState: StateFlow<CalendarUiState> = combine(
-        _currentMonth,
+        _weekStart,
         _selectedDate,
         getFamilyMembersUseCase(),
         getMealsUseCase(),
-        combine(_monthAssignments, _message, _isLoading) { assignments, msg, loading -> Triple(assignments, msg, loading) }
-    ) { month, date, members, meals, assignmentsAndMsg ->
+        combine(_week, _message, _isLoading) { assignments, msg, loading -> Triple(assignments, msg, loading) }
+    ) { start, date, members, meals, assignmentsAndMsg ->
         CalendarUiState(
-            currentMonth = month,
+            weekStart = start,
+            // Never expose the previous range while the new observer starts.
+            week = assignmentsAndMsg.first.takeIf { it.start == start } ?: WeekObservation(start),
             selectedDate = date,
             members = members,
             meals = meals,
-            monthAssignments = assignmentsAndMsg.first,
             message = assignmentsAndMsg.second,
             isLoading = assignmentsAndMsg.third
         )
@@ -83,21 +94,13 @@ class CalendarViewModel @Inject constructor(
         _message.value = null
     }
 
-    fun previousMonth() {
-        if (_isLoading.value) return
-        _currentMonth.value = _currentMonth.value.minusMonths(1)
+    fun showWeek(date: LocalDate) {
+        if (!_isLoading.value) _weekStart.value = WeekMenuPresentation.start(date)
     }
 
-    fun nextMonth() {
-        if (_isLoading.value) return
-        _currentMonth.value = _currentMonth.value.plusMonths(1)
-    }
-
-    fun observeDay(date: LocalDate) = assignMealsUseCase.getAssignments(date.format(formatter))
-
-    fun getAssignmentsForDate(date: LocalDate): List<DayAssignment> {
-        return _monthAssignments.value[date] ?: emptyList()
-    }
+    fun previousWeek() = showWeek(WeekMenuPresentation.navigate(_weekStart.value, -1))
+    fun nextWeek() = showWeek(WeekMenuPresentation.navigate(_weekStart.value, 1))
+    fun retryWeek() { _retry.value++ }
 
     private fun persist(onSuccess: () -> Unit, action: suspend () -> Unit) {
         if (_isLoading.value) return

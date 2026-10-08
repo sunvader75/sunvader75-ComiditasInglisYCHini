@@ -1,30 +1,22 @@
 package com.comiditas.familia.ui.screens.calendar
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -51,7 +43,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.comiditas.familia.data.model.DayAssignment
@@ -60,7 +51,6 @@ import com.comiditas.familia.data.model.Meal
 import com.comiditas.familia.domain.optimizer.MealReplacementProposal
 import androidx.compose.runtime.DisposableEffect
 import java.time.LocalDate
-import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -77,7 +67,7 @@ fun CalendarScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     var pendingWeek by remember { mutableStateOf<LocalDate?>(null) }
     var weekHasAssignments by remember { mutableStateOf<Boolean?>(null) }
-    val weekStart = com.comiditas.familia.domain.optimizer.WeekMealPlanGenerator.monday(uiState.selectedDate)
+    val weekStart = uiState.weekStart
     val rangeFormatter = remember { DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale("es")) }
 
     fun checkWeek(date: LocalDate) {
@@ -94,7 +84,7 @@ fun CalendarScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Calendario de Comidas") },
+                title = { Text("Menú semanal") },
                 navigationIcon = {
                     IconButton(enabled = !uiState.isLoading && pendingWeek == null, onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
@@ -110,32 +100,35 @@ fun CalendarScreen(
                 .padding(padding)
                 .padding(16.dp)
         ) {
-            MonthSelector(
-                currentMonth = uiState.currentMonth,
-                onPrevious = { if (!uiState.isLoading && pendingWeek == null) viewModel.previousMonth() },
-                onNext = { if (!uiState.isLoading && pendingWeek == null) viewModel.nextMonth() }
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                enabled = !uiState.isLoading && selectedDate == null && pendingWeek == null,
-                onClick = {
-                    pendingWeek = weekStart
-                    weekHasAssignments = null
-                    viewModel.clearMessage()
-                    checkWeek(weekStart)
-                }
-            ) { Text("Generar semana") }
             Text("${weekStart.format(rangeFormatter)} – ${weekStart.plusDays(6).format(rangeFormatter)}")
 
-            WeekdayHeader()
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(enabled = !uiState.isLoading && pendingWeek == null && selectedDate == null,
+                    onClick = viewModel::previousWeek) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Semana anterior")
+                }
+                Button(
+                    enabled = !uiState.isLoading && selectedDate == null && pendingWeek == null,
+                    onClick = {
+                        pendingWeek = weekStart
+                        weekHasAssignments = null
+                        viewModel.clearMessage()
+                        checkWeek(weekStart)
+                    }
+                ) { Text("Generar semana") }
+                IconButton(enabled = !uiState.isLoading && pendingWeek == null && selectedDate == null,
+                    onClick = viewModel::nextWeek) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Semana siguiente")
+                }
+            }
 
-            CalendarGrid(
-                month = uiState.currentMonth,
-                members = uiState.members,
-                monthAssignments = uiState.monthAssignments,
-                selectedDate = uiState.selectedDate,
+            WeekMenuContent(
+                state = uiState,
+                onRetry = viewModel::retryWeek,
                 onDateSelected = { date ->
                     if (!uiState.isLoading && selectedDate == null && pendingWeek == null) {
                         viewModel.selectDate(date)
@@ -177,13 +170,18 @@ fun CalendarScreen(
     }
 
     selectedDate?.let { date ->
-        val persisted by remember(date) { viewModel.observeDay(date) }
-            .collectAsStateWithLifecycle(initialValue = null)
-        if (persisted != null) DayDetailDialog(
+        if (!uiState.week.loaded) AlertDialog(
+            onDismissRequest = { selectedDate = null },
+            title = { Text("Editar día") },
+            text = { Text(uiState.week.error ?: "Cargando semana…") },
+            confirmButton = { if (uiState.week.error != null)
+                TextButton(onClick = viewModel::retryWeek) { Text("Reintentar") } },
+            dismissButton = { TextButton(onClick = { selectedDate = null }) { Text("Cerrar") } }
+        ) else DayDetailDialog(
             date = date,
             members = uiState.members,
             meals = uiState.meals,
-            assignments = persisted.orEmpty(),
+            assignments = uiState.week.assignments[date].orEmpty(),
             isLoading = uiState.isLoading,
             error = uiState.message,
             onDismiss = { if (!uiState.isLoading) selectedDate = null },
@@ -199,154 +197,30 @@ fun CalendarScreen(
 }
 
 @Composable
-private fun MonthSelector(
-    currentMonth: YearMonth,
-    onPrevious: () -> Unit,
-    onNext: () -> Unit
-) {
-    val formatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale("es"))
-
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(onClick = onPrevious) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Mes anterior")
-        }
-
-        Text(
-            text = currentMonth.format(formatter).replaceFirstChar { it.uppercase() },
-            style = MaterialTheme.typography.titleLarge
-        )
-
-        IconButton(onClick = onNext) {
-            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Mes siguiente")
-        }
-    }
-}
-
-@Composable
-private fun WeekdayHeader() {
-    val days = listOf("L", "M", "X", "J", "V", "S", "D")
-    Row(modifier = Modifier.fillMaxWidth()) {
-        days.forEach { day ->
-            Text(
-                text = day,
-                modifier = Modifier.weight(1f),
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.labelMedium
-            )
-        }
-    }
-}
-
-@Composable
-private fun CalendarGrid(
-    month: YearMonth,
-    members: List<FamilyMember>,
-    monthAssignments: Map<LocalDate, List<DayAssignment>>,
-    selectedDate: LocalDate,
+internal fun WeekMenuContent(
+    state: CalendarUiState,
+    onRetry: () -> Unit,
     onDateSelected: (LocalDate) -> Unit
 ) {
-    val days = remember(month) {
-        val firstDayOfMonth = month.atDay(1)
-        val daysInMonth = month.lengthOfMonth()
-        val firstDayOfWeek = firstDayOfMonth.dayOfWeek.value % 7
-        val offset = if (firstDayOfWeek == 0) 6 else firstDayOfWeek - 1
-
-        val list = mutableListOf<LocalDate?>()
-        repeat(offset) { list.add(null) }
-        for (day in 1..daysInMonth) {
-            list.add(month.atDay(day))
+    val formatter = remember { DateTimeFormatter.ofPattern("EEEE dd/MM/yyyy", Locale("es")) }
+    val days = WeekMenuPresentation.days(state.weekStart, state.week.assignments, state.members, state.meals)
+    LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        if (state.week.error != null) item {
+            Text(state.week.error, color = MaterialTheme.colorScheme.error)
+            TextButton(onClick = onRetry) { Text("Reintentar") }
         }
-        list
-    }
-
-    val today = remember { LocalDate.now() }
-
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(7),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        items(
-            count = days.size,
-            key = { index ->
-                val date = days[index]
-                if (date != null) {
-                    date.toString()
-                } else {
-                    "padding-${month.year}-${month.monthValue}-$index"
-                }
-            }
-        ) { index ->
-            val date = days[index]
-            if (date != null) {
-                val assignments = monthAssignments[date] ?: emptyList()
-                DayCell(
-                    date = date,
-                    isSelected = date == selectedDate,
-                    isToday = date == today,
-                    assignments = assignments,
-                    members = members,
-                    onClick = { onDateSelected(date) }
-                )
-            } else {
-                Box(modifier = Modifier.aspectRatio(1f))
-            }
-        }
-    }
-}
-
-@Composable
-private fun DayCell(
-    date: LocalDate,
-    isSelected: Boolean,
-    isToday: Boolean,
-    assignments: List<DayAssignment>,
-    members: List<FamilyMember>,
-    onClick: () -> Unit
-) {
-    val borderColor = when {
-        isSelected -> MaterialTheme.colorScheme.primary
-        isToday -> MaterialTheme.colorScheme.secondary
-        else -> Color.Transparent
-    }
-
-    Box(
-        modifier = Modifier
-            .aspectRatio(1f)
-            .padding(2.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .border(2.dp, borderColor, RoundedCornerShape(8.dp))
-            .clickable(onClick = onClick)
-            .padding(4.dp)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = date.dayOfMonth.toString(),
-                style = MaterialTheme.typography.bodyMedium,
-                color = if (isToday) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
-            )
-
-            // Mostrar indicadores de asignación
-            if (assignments.isNotEmpty() && members.isNotEmpty()) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(2.dp),
-                    modifier = Modifier.padding(top = 2.dp)
-                ) {
-                    assignments.forEach { assignment ->
-                        val member = members.find { it.id == assignment.memberId }
-                        if (member != null) {
-                            Box(
-                                modifier = Modifier
-                                    .size(6.dp)
-                                    .clip(CircleShape)
-                                    .background(Color(member.color))
-                            )
+        items(days, key = { it.date.toString() }) { day ->
+            Card(onClick = { onDateSelected(day.date) }, modifier = Modifier.fillMaxWidth()) {
+                Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(day.date.format(formatter).replaceFirstChar { it.uppercase() },
+                        style = MaterialTheme.typography.titleMedium)
+                    when {
+                        state.week.error != null -> Text("Menú no disponible")
+                        !state.week.loaded -> Text("Cargando semana…")
+                        day.dishes.isEmpty() -> Text("Sin comidas asignadas")
+                        else -> day.dishes.forEach { dish ->
+                            Text(dish.name, style = MaterialTheme.typography.titleSmall)
+                            Text(dish.recipients.joinToString())
                         }
                     }
                 }

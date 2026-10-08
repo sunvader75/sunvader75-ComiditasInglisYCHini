@@ -74,8 +74,8 @@ fun HomeScreen(
             )
 
             MenuCard(
-                title = "Calendario",
-                subtitle = "Planifica las comidas del mes",
+                title = "Menú semanal",
+                subtitle = "Consulta y edita las comidas de la semana",
                 icon = { Icon(Icons.Default.DateRange, contentDescription = null) },
                 onClick = { onNavigate(Screen.Calendar.route) }
             )
@@ -83,7 +83,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = "Primero configura los miembros y las comidas, luego sus gustos, y finalmente planifica en el calendario.",
+                text = "Primero configura los miembros y las comidas, luego sus gustos, y finalmente planifica en el menú semanal.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(8.dp)
