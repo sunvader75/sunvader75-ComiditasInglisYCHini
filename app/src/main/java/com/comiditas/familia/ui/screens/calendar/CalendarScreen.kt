@@ -75,7 +75,7 @@ fun CalendarScreen(
     LaunchedEffect(uiState.message) {
         uiState.message?.let {
             snackbarHostState.showSnackbar(it)
-            viewModel.clearMessage()
+            if (selectedDate == null) viewModel.clearMessage()
         }
     }
 
@@ -122,21 +122,19 @@ fun CalendarScreen(
     }
 
     selectedDate?.let { date ->
-        DayDetailDialog(
+        val persisted by remember(date) { viewModel.observeDay(date) }
+            .collectAsStateWithLifecycle(initialValue = null)
+        if (persisted != null) DayDetailDialog(
             date = date,
             members = uiState.members,
             meals = uiState.meals,
-            assignments = uiState.monthAssignments[date] ?: emptyList(),
-            onDismiss = { selectedDate = null },
-            onRandomAssign = {
-                viewModel.assignRandomly(date)
-            },
-            onManualAssign = { memberId, mealId ->
-                viewModel.assignManually(date, memberId, mealId)
-            },
-            onRemoveAssignment = { memberId ->
-                viewModel.removeAssignment(date, memberId)
-            }
+            assignments = persisted.orEmpty(),
+            isLoading = uiState.isLoading,
+            error = uiState.message,
+            onDismiss = { if (!uiState.isLoading) selectedDate = null },
+            onRandomAssign = { viewModel.assignRandomly(date) { selectedDate = null } },
+            onSave = { draft -> viewModel.saveDay(date, draft) { selectedDate = null } },
+            onClear = { viewModel.clearDay(date) { selectedDate = null } }
         )
     }
 }
@@ -305,11 +303,13 @@ private fun DayDetailDialog(
     meals: List<Meal>,
     assignments: List<DayAssignment>,
     onDismiss: () -> Unit,
+    isLoading: Boolean,
+    error: String?,
     onRandomAssign: () -> Unit,
-    onManualAssign: (Long, Long) -> Unit,
-    onRemoveAssignment: (Long) -> Unit
+    onSave: (Map<Long, Long>) -> Unit,
+    onClear: () -> Unit
 ) {
-    val assignmentMap = remember(assignments) { assignments.associateBy { it.memberId } }
+    var draft by remember(date) { mutableStateOf(assignments.associate { it.memberId to it.mealId }) }
     val mealMap = remember(meals) { meals.associateBy { it.id } }
     var showManualAssign by remember { mutableStateOf<Long?>(null) }
 
@@ -334,8 +334,7 @@ private fun DayDetailDialog(
                 } else {
                     members.forEach { member ->
                         key(member.id) {
-                            val assignment = assignmentMap[member.id]
-                            val meal = assignment?.let { mealMap[it.mealId] }
+                            val meal = draft[member.id]?.let { mealMap[it] }
 
                             Card(
                                 modifier = Modifier.fillMaxWidth()
@@ -368,14 +367,8 @@ private fun DayDetailDialog(
                                         )
                                     }
 
-                                    if (meal != null) {
-                                        TextButton(onClick = { onRemoveAssignment(member.id) }) {
-                                            Text("Quitar")
-                                        }
-                                    } else {
-                                        TextButton(onClick = { showManualAssign = member.id }) {
-                                            Text("Asignar")
-                                        }
+                                    TextButton(enabled = !isLoading, onClick = { showManualAssign = member.id }) {
+                                        Text(if (meal != null) "Cambiar" else "Asignar")
                                     }
                                 }
                             }
@@ -385,16 +378,17 @@ private fun DayDetailDialog(
             }
         },
         confirmButton = {
-            Button(onClick = onRandomAssign) {
-                Icon(Icons.Default.Refresh, contentDescription = null)
-                Spacer(modifier = Modifier.size(4.dp))
-                Text("Aleatorio")
+            Column {
+                error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                Button(enabled = !isLoading, onClick = { onSave(draft) }) {
+                    Text(if (isLoading) "Guardando…" else "Guardar")
+                }
+                TextButton(enabled = !isLoading, onClick = onRandomAssign) { Text("Aleatorio") }
+                TextButton(enabled = !isLoading, onClick = onClear) { Text("Borrar todo el plan del día") }
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cerrar")
-            }
+            TextButton(enabled = !isLoading, onClick = onDismiss) { Text("Cerrar") }
         }
     )
 
@@ -404,7 +398,7 @@ private fun DayDetailDialog(
             meals = meals,
             onDismiss = { showManualAssign = null },
             onSelect = { mealId ->
-                onManualAssign(memberId, mealId)
+                draft = draft + (memberId to mealId)
                 showManualAssign = null
             }
         )

@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.comiditas.familia.data.local.entity.DayAssignmentEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -23,6 +24,16 @@ interface DayAssignmentDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(assignment: DayAssignmentEntity)
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insertAll(assignments: List<DayAssignmentEntity>)
+
+    @Transaction
+    suspend fun replaceDay(date: String, assignments: List<DayAssignmentEntity>) {
+        require(assignments.all { it.date == date })
+        deleteByDate(date)
+        insertAll(assignments)
+    }
 
     @Query("DELETE FROM day_assignments WHERE date = :date AND memberId = :memberId")
     suspend fun delete(date: String, memberId: Long)

@@ -21,6 +21,10 @@ class DayAssignmentRepository @Inject constructor(
     fun getBetweenDates(startDate: String, endDate: String): Flow<List<DayAssignment>> =
         dao.getBetweenDatesFlow(startDate, endDate).map { list -> list.map { it.toModel() } }
 
+    suspend fun replaceDay(date: String, assignments: List<DayAssignment>) {
+        dao.replaceDay(date, assignments.map { DayAssignmentEntity(it.date, it.memberId, it.mealId) })
+    }
+
     suspend fun assign(date: String, memberId: Long, mealId: Long) {
         dao.insert(DayAssignmentEntity(date, memberId, mealId))
     }

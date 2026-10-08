@@ -1,0 +1,73 @@
+package com.comiditas.familia.domain.usecase
+
+import androidx.room.Room
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.comiditas.familia.data.local.AppDatabase
+import com.comiditas.familia.data.local.entity.*
+import com.comiditas.familia.data.model.DayAssignment
+import com.comiditas.familia.data.repository.*
+import com.comiditas.familia.domain.optimizer.MealAssignmentOptimizer
+import kotlinx.coroutines.runBlocking
+import org.junit.Assert.*
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+
+@RunWith(AndroidJUnit4::class)
+class AssignMealsUseCaseTest {
+    private lateinit var database: AppDatabase
+    private lateinit var repository: DayAssignmentRepository
+    private lateinit var useCase: AssignMealsUseCase
+    private val original = listOf(DayAssignment("day", 1, 1), DayAssignment("day", 2, 1))
+
+    @Before fun setUp() = runBlocking {
+        database = Room.inMemoryDatabaseBuilder(
+            InstrumentationRegistry.getInstrumentation().targetContext, AppDatabase::class.java
+        ).build()
+        repository = DayAssignmentRepository(database.dayAssignmentDao())
+        val preferences = MealPreferenceRepository(database.mealPreferenceDao())
+        useCase = AssignMealsUseCase(repository, FamilyMemberRepository(database.familyMemberDao()),
+            MealRepository(database.mealDao()), preferences, MealAssignmentOptimizer())
+        for (id in 1L..2L) {
+            database.familyMemberDao().insert(FamilyMemberEntity(id, "Member $id", 0))
+            database.mealDao().insert(MealEntity(id, "Meal $id"))
+            preferences.setPreference(id, 1, true)
+        }
+        useCase.saveDay("day", original)
+    }
+
+    @After fun tearDown() { database.close() }
+
+    @Test fun rejectedMutationsPreserveRows() = runBlocking {
+        val changes: List<suspend () -> Unit> = listOf(
+            { useCase.removeAssignment("day", 1) },
+            { useCase.assignManually("day", 1, 2) },
+            { useCase.saveDay("day", original.take(1)) },
+            { useCase.saveDay("day", emptyList()) }
+        )
+        for (change in changes) {
+            try { change(); fail("Invalid proposal must be rejected") } catch (_: IllegalArgumentException) { }
+            assertEquals(original, repository.getByDate("day").sortedBy { it.memberId })
+        }
+    }
+
+    @Test fun failedInsertRollsBackDeletedDay() = runBlocking {
+        try {
+            database.dayAssignmentDao().replaceDay("day", listOf(
+                DayAssignmentEntity("day", 1, 2), DayAssignmentEntity("day", 999, 1)))
+            fail("Foreign key failure expected")
+        } catch (_: android.database.sqlite.SQLiteConstraintException) { }
+        assertEquals(original, repository.getByDate("day").sortedBy { it.memberId })
+    }
+
+    @Test fun validReplacementAndExplicitClear() = runBlocking {
+        MealPreferenceRepository(database.mealPreferenceDao()).setPreference(2, 2, true)
+        val replacement = listOf(original[0], original[1].copy(mealId = 2))
+        useCase.saveDay("day", replacement)
+        assertEquals(replacement, repository.getByDate("day").sortedBy { it.memberId })
+        useCase.clearDay("day")
+        assertTrue(repository.getByDate("day").isEmpty())
+    }
+}

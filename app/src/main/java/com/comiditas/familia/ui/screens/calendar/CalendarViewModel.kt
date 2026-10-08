@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.CancellationException
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -43,6 +44,7 @@ class CalendarViewModel @Inject constructor(
     private val _currentMonth = MutableStateFlow(YearMonth.now())
     private val _selectedDate = MutableStateFlow(LocalDate.now())
     private val _message = MutableStateFlow<String?>(null)
+    private val _isLoading = MutableStateFlow(false)
 
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     private val _monthAssignments: StateFlow<Map<LocalDate, List<DayAssignment>>> = _currentMonth
@@ -62,7 +64,7 @@ class CalendarViewModel @Inject constructor(
         _selectedDate,
         getFamilyMembersUseCase(),
         getMealsUseCase(),
-        combine(_monthAssignments, _message) { assignments, msg -> assignments to msg }
+        combine(_monthAssignments, _message, _isLoading) { assignments, msg, loading -> Triple(assignments, msg, loading) }
     ) { month, date, members, meals, assignmentsAndMsg ->
         CalendarUiState(
             currentMonth = month,
@@ -70,7 +72,8 @@ class CalendarViewModel @Inject constructor(
             members = members,
             meals = meals,
             monthAssignments = assignmentsAndMsg.first,
-            message = assignmentsAndMsg.second
+            message = assignmentsAndMsg.second,
+            isLoading = assignmentsAndMsg.third
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), CalendarUiState())
 
@@ -87,32 +90,46 @@ class CalendarViewModel @Inject constructor(
         _currentMonth.value = _currentMonth.value.plusMonths(1)
     }
 
+    fun observeDay(date: LocalDate) = assignMealsUseCase.getAssignments(date.format(formatter))
+
     fun getAssignmentsForDate(date: LocalDate): List<DayAssignment> {
         return _monthAssignments.value[date] ?: emptyList()
     }
 
-    fun assignRandomly(date: LocalDate) {
+    private fun persist(onSuccess: () -> Unit, action: suspend () -> Unit) {
+        if (_isLoading.value) return
+        _isLoading.value = true
+        _message.value = null
         viewModelScope.launch {
-            _message.value = null
-            val success = assignMealsUseCase.assignRandomly(date.format(formatter))
-            _message.value = if (success) {
-                "Comidas asignadas correctamente"
-            } else {
-                "No se pudo asignar. Verifica que haya comidas y gustos configurados."
+            try {
+                action()
+                onSuccess()
+            } catch (error: CancellationException) {
+                throw error
+            } catch (error: IllegalArgumentException) {
+                _message.value = error.message ?: "El plan no es válido."
+            } catch (error: Exception) {
+                _message.value = "No se pudo guardar. Inténtalo de nuevo; el plan anterior se conserva."
+            } finally {
+                _isLoading.value = false
             }
         }
     }
 
-    fun assignManually(date: LocalDate, memberId: Long, mealId: Long) {
-        viewModelScope.launch {
-            assignMealsUseCase.assignManually(date.format(formatter), memberId, mealId)
+    fun assignRandomly(date: LocalDate, onSuccess: () -> Unit) = persist(onSuccess) {
+        require(assignMealsUseCase.assignRandomly(date.format(formatter))) {
+            "No hay un plan de hasta dos comidas que guste a todos."
         }
     }
 
-    fun removeAssignment(date: LocalDate, memberId: Long) {
-        viewModelScope.launch {
-            assignMealsUseCase.removeAssignment(date.format(formatter), memberId)
-        }
+    fun saveDay(date: LocalDate, draft: Map<Long, Long>, onSuccess: () -> Unit) = persist(onSuccess) {
+        assignMealsUseCase.saveDay(date.format(formatter), draft.map { (member, meal) ->
+            DayAssignment(date.format(formatter), member, meal)
+        })
+    }
+
+    fun clearDay(date: LocalDate, onSuccess: () -> Unit) = persist(onSuccess) {
+        assignMealsUseCase.clearDay(date.format(formatter))
     }
 
     fun clearMessage() {

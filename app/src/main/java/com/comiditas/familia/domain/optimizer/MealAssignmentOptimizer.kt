@@ -1,14 +1,12 @@
 package com.comiditas.familia.domain.optimizer
 
+import com.comiditas.familia.data.model.DayAssignment
 import com.comiditas.familia.data.model.FamilyMember
 import com.comiditas.familia.data.model.Meal
+import com.comiditas.familia.domain.validation.DayAssignmentValidator
 import javax.inject.Inject
 import kotlin.random.Random
 
-/**
- * Representa una asignación de comidas para un día.
- * @param assignments Mapa de mealId -> lista de memberIds que comen esa comida
- */
 data class OptimizedAssignment(
     val assignments: Map<Long, List<Long>>,
     val mealDetails: Map<Long, Meal>
@@ -17,106 +15,38 @@ data class OptimizedAssignment(
 }
 
 class MealAssignmentOptimizer @Inject constructor() {
-
-    /**
-     * Encuentra la asignación óptima de comidas para un día.
-     * Prioridad: minimizar el número de comidas diferentes.
-     *
-     * @param members Lista de miembros de la familia
-     * @param meals Lista de comidas disponibles
-     * @param preferences Mapa de memberId -> Set de mealIds que le gustan
-     * @param random Random para selección aleatoria
-     * @return OptimizedAssignment o null si no hay solución
-     */
     fun optimize(
         members: List<FamilyMember>,
         meals: List<Meal>,
         preferences: Map<Long, Set<Long>>,
         random: Random = Random.Default
     ): OptimizedAssignment? {
-        if (members.isEmpty()) return null
-
-        // Verificar que cada miembro tenga al menos una comida que le guste
-        for (member in members) {
-            val liked = preferences[member.id].orEmpty()
-            if (liked.isEmpty()) return null
+        if (members.size !in 1..3 || members.map { it.id }.distinct().size != members.size) return null
+        val ids = members.map { it.id }
+        fun common(group: List<Long>) = meals.map { it.id }.distinct().filter { meal ->
+            group.all { meal in preferences[it].orEmpty() }
         }
+        fun result(groups: Map<Long, List<Long>>): OptimizedAssignment? {
+            val rows = groups.flatMap { (meal, recipients) -> recipients.map { DayAssignment("", it, meal) } }
+            if (DayAssignmentValidator.error("", rows, members, meals, preferences) != null) return null
+            return OptimizedAssignment(groups, meals.associateBy { it.id })
+        }
+        val shared = common(ids)
+        if (shared.isNotEmpty()) return result(mapOf(shared.random(random) to ids))
 
-        // Generar todas las opciones posibles ordenadas por número de comidas
-        val allOptions = generateAllOptions(members)
-
-        for (option in allOptions) {
-            val validAssignments = findValidAssignments(option, meals, preferences, random)
-            if (validAssignments != null) {
-                val mealDetails = meals.associateBy { it.id }
-                return OptimizedAssignment(validAssignments, mealDetails)
+        // At most three bipartitions; no Cartesian enumeration over meal triples.
+        val splits = (1 until (1 shl ids.size)).filter { it and 1 != 0 && it != (1 shl ids.size) - 1 }
+            .shuffled(random)
+        for (mask in splits) {
+            val first = ids.filterIndexed { index, _ -> mask and (1 shl index) != 0 }
+            val second = ids.filter { it !in first }
+            val firstMeals = common(first)
+            val secondMeals = common(second)
+            if (firstMeals.isNotEmpty() && secondMeals.isNotEmpty()) {
+                // With no global common meal these sets are disjoint.
+                return result(mapOf(firstMeals.random(random) to first, secondMeals.random(random) to second))
             }
         }
-
         return null
-    }
-
-    /**
-     * Genera todas las posibles particiones de los miembros ordenadas por tamaño (menos comidas primero).
-     */
-    private fun generateAllOptions(members: List<FamilyMember>): List<List<List<Long>>> {
-        val memberIds = members.map { it.id }
-        val options = mutableListOf<List<List<Long>>>()
-
-        // 1 comida para todos
-        options.add(listOf(memberIds))
-
-        // 2 comidas: todos los pares posibles + individual
-        for (i in memberIds.indices) {
-            for (j in i + 1 until memberIds.size) {
-                val pair = listOf(memberIds[i], memberIds[j])
-                val remaining = memberIds.filter { it != memberIds[i] && it != memberIds[j] }
-                options.add(listOf(pair, remaining))
-            }
-        }
-
-        // 3 comidas: cada uno individual
-        options.add(memberIds.map { listOf(it) })
-
-        return options
-    }
-
-    /**
-     * Para una opción dada (lista de grupos), encuentra comidas válidas.
-     * @return Map de mealId -> memberIds, o null si no es posible
-     */
-    private fun findValidAssignments(
-        groups: List<List<Long>>,
-        meals: List<Meal>,
-        preferences: Map<Long, Set<Long>>,
-        random: Random
-    ): Map<Long, List<Long>>? {
-        val result = mutableMapOf<Long, List<Long>>()
-        val usedMeals = mutableSetOf<Long>()
-
-        for (group in groups) {
-            // Encontrar comidas que le gusten a TODOS en el grupo
-            val likedByAll = meals.filter { meal ->
-                group.all { memberId ->
-                    preferences[memberId].orEmpty().contains(meal.id)
-                }
-            }
-
-            if (likedByAll.isEmpty()) return null
-
-            // Elegir una comida aleatoria que no se haya usado ya
-            val available = likedByAll.filter { it.id !in usedMeals }
-            val chosen = if (available.isNotEmpty()) {
-                available.random(random)
-            } else {
-                // Si no hay disponibles nuevos, reutilizar uno (menos ideal, pero válido)
-                likedByAll.random(random)
-            }
-
-            usedMeals.add(chosen.id)
-            result[chosen.id] = group
-        }
-
-        return result
     }
 }
