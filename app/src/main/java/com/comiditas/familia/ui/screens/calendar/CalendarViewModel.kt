@@ -149,6 +149,42 @@ class CalendarViewModel @Inject constructor(
         }
     }
 
+    private var preparationJob: kotlinx.coroutines.Job? = null
+    private var preparationVersion = 0L
+    private val _isPreparingReplacement = MutableStateFlow(false)
+    val isPreparingReplacement: StateFlow<Boolean> = _isPreparingReplacement
+    private val _replacementError = MutableStateFlow<String?>(null)
+    val replacementError: StateFlow<String?> = _replacementError
+
+    fun cancelReplacement() {
+        preparationVersion++
+        preparationJob?.cancel()
+        _isPreparingReplacement.value = false
+        _replacementError.value = null
+    }
+
+    fun prepareReplacement(date: LocalDate, draft: Map<Long, Long>, oldMealId: Long,
+        onReady: (List<com.comiditas.familia.domain.optimizer.MealReplacementProposal>) -> Unit) {
+        if (_isLoading.value || _isPreparingReplacement.value) return
+        val frozenDraft = draft.toMap()
+        val version = ++preparationVersion
+        _isPreparingReplacement.value = true
+        _replacementError.value = null
+        preparationJob = viewModelScope.launch {
+            try {
+                val proposals = assignMealsUseCase.replacementProposals(frozenDraft, oldMealId)
+                if (version == preparationVersion && date == _selectedDate.value) onReady(proposals)
+            } catch (error: CancellationException) {
+                throw error
+            } catch (error: Exception) {
+                if (version == preparationVersion) _replacementError.value =
+                    "No se pudieron preparar alternativas. Inténtalo de nuevo."
+            } finally {
+                if (version == preparationVersion) _isPreparingReplacement.value = false
+            }
+        }
+    }
+
     fun clearMessage() {
         _message.value = null
     }

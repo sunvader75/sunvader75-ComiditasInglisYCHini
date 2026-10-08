@@ -60,6 +60,15 @@ class AssignMealsUseCase @Inject constructor(
         dayAssignmentRepository.replaceDay(date, assignments)
     }
 
+    suspend fun replacementProposals(draft: Map<Long, Long>, oldMealId: Long):
+        List<com.comiditas.familia.domain.optimizer.MealReplacementProposal> {
+        val members = memberRepository.getAll().first()
+        val meals = mealRepository.getAll().first()
+        val preferences = members.associate { it.id to preferenceRepository.getLikedMealIdsByMember(it.id).toSet() }
+        return com.comiditas.familia.domain.optimizer.MealReplacementPlanner.plan(
+            members.map { it.id }, meals.map { it.id }, preferences, draft, oldMealId)
+    }
+
     suspend fun clearDay(date: String) = dayAssignmentRepository.clearDate(date)
 
     suspend fun assignRandomly(date: String): Boolean {

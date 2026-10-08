@@ -57,6 +57,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.comiditas.familia.data.model.DayAssignment
 import com.comiditas.familia.data.model.FamilyMember
 import com.comiditas.familia.data.model.Meal
+import com.comiditas.familia.domain.optimizer.MealReplacementProposal
+import androidx.compose.runtime.DisposableEffect
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -69,6 +71,8 @@ fun CalendarScreen(
     onBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val isPreparing by viewModel.isPreparingReplacement.collectAsStateWithLifecycle()
+    val preparationError by viewModel.replacementError.collectAsStateWithLifecycle()
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
     var pendingWeek by remember { mutableStateOf<LocalDate?>(null) }
@@ -133,7 +137,7 @@ fun CalendarScreen(
                 monthAssignments = uiState.monthAssignments,
                 selectedDate = uiState.selectedDate,
                 onDateSelected = { date ->
-                    if (!uiState.isLoading && pendingWeek == null) {
+                    if (!uiState.isLoading && selectedDate == null && pendingWeek == null) {
                         viewModel.selectDate(date)
                         selectedDate = date
                     }
@@ -185,7 +189,11 @@ fun CalendarScreen(
             onDismiss = { if (!uiState.isLoading) selectedDate = null },
             onRandomAssign = { viewModel.assignRandomly(date) { selectedDate = null } },
             onSave = { draft -> viewModel.saveDay(date, draft) { selectedDate = null } },
-            onClear = { viewModel.clearDay(date) { selectedDate = null } }
+            onClear = { viewModel.clearDay(date) { selectedDate = null } },
+            isPreparing = isPreparing,
+            preparationError = preparationError,
+            onPrepare = { draft, old, ready -> viewModel.prepareReplacement(date, draft, old, ready) },
+            onCancelReplacement = viewModel::cancelReplacement
         )
     }
 }
@@ -348,7 +356,7 @@ private fun DayCell(
 }
 
 @Composable
-private fun DayDetailDialog(
+internal fun DayDetailDialog(
     date: LocalDate,
     members: List<FamilyMember>,
     meals: List<Meal>,
@@ -358,31 +366,91 @@ private fun DayDetailDialog(
     error: String?,
     onRandomAssign: () -> Unit,
     onSave: (Map<Long, Long>) -> Unit,
-    onClear: () -> Unit
+    onClear: () -> Unit,
+    isPreparing: Boolean,
+    preparationError: String?,
+    onPrepare: (Map<Long, Long>, Long, (List<MealReplacementProposal>) -> Unit) -> Unit,
+    onCancelReplacement: () -> Unit
 ) {
     var draft by remember(date) { mutableStateOf(assignments.associate { it.memberId to it.mealId }) }
     val mealMap = remember(meals) { meals.associateBy { it.id } }
     var showManualAssign by remember { mutableStateOf<Long?>(null) }
 
+    var changingMeal by remember(date) { mutableStateOf<Long?>(null) }
+    var options by remember(date) { mutableStateOf<List<MealReplacementProposal>?>(null) }
+    var selectedProposal by remember(date) { mutableStateOf<MealReplacementProposal?>(null) }
+    var requestVersion by remember(date) { mutableStateOf(0L) }
+    val complete = members.size in 1..3 && draft.keys == members.map { it.id }.toSet() &&
+        draft.values.toSet().size <= 2 && draft.values.all { it in mealMap }
+    fun cancelChange() {
+        requestVersion++
+        onCancelReplacement()
+        changingMeal = null
+        options = null
+        selectedProposal = null
+    }
+    fun prepare(old: Long) {
+        val frozen = draft.toMap()
+        val version = ++requestVersion
+        onPrepare(frozen, old) { result ->
+            if (version == requestVersion && changingMeal == old && draft == frozen) options = result
+        }
+    }
+    DisposableEffect(date) { onDispose { onCancelReplacement() } }
     val formatter = remember { DateTimeFormatter.ofPattern("EEEE d 'de' MMMM", Locale("es")) }
 
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(
-                text = date.format(formatter).replaceFirstChar { it.uppercase() }
-            )
-        },
+    if (showManualAssign == null) AlertDialog(
+        onDismissRequest = { if (!isLoading) { if (changingMeal != null) cancelChange() else onDismiss() } },
+        properties = androidx.compose.ui.window.DialogProperties(
+            dismissOnBackPress = !isLoading, dismissOnClickOutside = !isLoading),
+        title = { Text(if (changingMeal != null) "Cambiar comida" else
+            date.format(formatter).replaceFirstChar { it.uppercase() }) },
         text = {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                if (members.isEmpty()) {
+                if (changingMeal != null) {
+                    if (isPreparing) Text("Preparando alternativas…")
+                    preparationError?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                    if (options?.isEmpty() == true) Text("No hay alternativas válidas para este día.")
+                    Column(Modifier.verticalScroll(rememberScrollState())) {
+                        val visible = selectedProposal?.let { listOf(it) } ?: options.orEmpty()
+                        visible.forEach { proposal ->
+                            Card(Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+                                Column(Modifier.padding(12.dp)) {
+                                    Text(if (proposal.reorganizesDay) "Reorganiza el plan del día" else "Sustitución directa")
+                                    proposal.assignments.entries.groupBy { it.value }.forEach { (meal, recipients) ->
+                                        Text("${mealMap[meal]?.name ?: meal}: " + recipients.joinToString { row ->
+                                            members.find { it.id == row.key }?.name ?: row.key.toString()
+                                        })
+                                    }
+                                    if (selectedProposal == null) TextButton(enabled = !isLoading,
+                                        onClick = { selectedProposal = proposal; }) { Text("Elegir") }
+                                }
+                            }
+                        }
+                    }
+                } else if (members.isEmpty()) {
                     Text("No hay miembros configurados.")
                 } else if (meals.isEmpty()) {
                     Text("No hay comidas configuradas.")
                 } else {
+                    if (complete) draft.entries.groupBy { it.value }.forEach { (meal, recipients) ->
+                        Card(Modifier.fillMaxWidth()) {
+                            Column(Modifier.padding(12.dp)) {
+                                Text(mealMap.getValue(meal).name)
+                                Text(recipients.joinToString { row -> members.first { it.id == row.key }.name })
+                                TextButton(enabled = !isLoading, onClick = {
+                                    changingMeal = meal
+                                    options = null
+                                    selectedProposal = null
+                                    prepare(meal)
+                                }) { Text("Cambiar") }
+                            }
+                        }
+                    }
+                    Text("Editor manual")
                     members.forEach { member ->
                         key(member.id) {
                             val meal = draft[member.id]?.let { mealMap[it] }
@@ -419,7 +487,7 @@ private fun DayDetailDialog(
                                     }
 
                                     TextButton(enabled = !isLoading, onClick = { showManualAssign = member.id }) {
-                                        Text(if (meal != null) "Cambiar" else "Asignar")
+                                        Text(if (meal != null) "Editar" else "Asignar")
                                     }
                                 }
                             }
@@ -431,15 +499,26 @@ private fun DayDetailDialog(
         confirmButton = {
             Column {
                 error?.let { Text(it, color = MaterialTheme.colorScheme.error) }
-                Button(enabled = !isLoading, onClick = { onSave(draft) }) {
-                    Text(if (isLoading) "Guardando…" else "Guardar")
+                if (changingMeal != null) {
+                    Button(enabled = !isLoading && !isPreparing && selectedProposal != null,
+                        onClick = { selectedProposal?.let { onSave(it.assignments) } }) {
+                        Text(if (isLoading) "Guardando…" else "Confirmar cambio")
+                    }
+                    if (preparationError != null) TextButton(enabled = !isPreparing,
+                        onClick = { changingMeal?.let { prepare(it) } }) { Text("Reintentar") }
+                } else {
+                    Button(enabled = !isLoading, onClick = { onSave(draft) }) {
+                        Text(if (isLoading) "Guardando…" else "Guardar")
+                    }
+                    TextButton(enabled = !isLoading, onClick = onRandomAssign) { Text("Aleatorio") }
+                    TextButton(enabled = !isLoading, onClick = onClear) { Text("Borrar todo el plan del día") }
                 }
-                TextButton(enabled = !isLoading, onClick = onRandomAssign) { Text("Aleatorio") }
-                TextButton(enabled = !isLoading, onClick = onClear) { Text("Borrar todo el plan del día") }
             }
         },
         dismissButton = {
-            TextButton(enabled = !isLoading, onClick = onDismiss) { Text("Cerrar") }
+            TextButton(enabled = !isLoading, onClick = {
+                if (changingMeal != null) cancelChange() else onDismiss()
+            }) { Text(if (changingMeal != null) "Cancelar" else "Cerrar") }
         }
     )
 

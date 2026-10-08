@@ -40,6 +40,30 @@ class AssignMealsUseCaseTest {
 
     @After fun tearDown() { database.close() }
 
+    @Test fun proposalsAreReadOnlyAndConfirmationReplacesOnlyTargetDay() = runBlocking {
+        val preferences = MealPreferenceRepository(database.mealPreferenceDao())
+        for (id in 1L..2L) preferences.setPreference(id, 2, true)
+        repository.assign("neighbor", 1, 1)
+        val proposal = useCase.replacementProposals(original.associate { it.memberId to it.mealId }, 1).first()
+        assertEquals(original, repository.getByDate("day").sortedBy { it.memberId })
+        useCase.saveDay("day", proposal.assignments.map { (member, meal) -> DayAssignment("day", member, meal) })
+        assertEquals(listOf(DayAssignment("day", 1, 2), DayAssignment("day", 2, 2)),
+            repository.getByDate("day").sortedBy { it.memberId })
+        assertEquals(listOf(DayAssignment("neighbor", 1, 1)), repository.getByDate("neighbor"))
+    }
+
+    @Test fun freshPreferencesRejectConfirmationWithoutDeletingRows() = runBlocking {
+        val preferences = MealPreferenceRepository(database.mealPreferenceDao())
+        for (id in 1L..2L) preferences.setPreference(id, 2, true)
+        val proposal = useCase.replacementProposals(original.associate { it.memberId to it.mealId }, 1).first()
+        preferences.setPreference(2, 2, false)
+        try {
+            useCase.saveDay("day", proposal.assignments.map { (member, meal) -> DayAssignment("day", member, meal) })
+            fail("Fresh validation must reject the confirmation")
+        } catch (_: IllegalArgumentException) { }
+        assertEquals(original, repository.getByDate("day").sortedBy { it.memberId })
+    }
+
     @Test fun rejectedMutationsPreserveRows() = runBlocking {
         val changes: List<suspend () -> Unit> = listOf(
             { useCase.removeAssignment("day", 1) },
