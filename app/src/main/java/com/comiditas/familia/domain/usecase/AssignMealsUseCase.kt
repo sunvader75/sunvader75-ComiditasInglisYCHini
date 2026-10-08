@@ -7,6 +7,8 @@ import com.comiditas.familia.data.repository.MealPreferenceRepository
 import com.comiditas.familia.data.repository.MealRepository
 import com.comiditas.familia.domain.optimizer.MealAssignmentOptimizer
 import com.comiditas.familia.domain.validation.DayAssignmentValidator
+import com.comiditas.familia.domain.validation.MealPlanDiagnostics
+import com.comiditas.familia.domain.validation.ExplainedMealPlanException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -35,6 +37,10 @@ class AssignMealsUseCase @Inject constructor(
         val members = memberRepository.getAll().first()
         val meals = mealRepository.getAll().first()
         val preferences = members.associate { it.id to preferenceRepository.getLikedMealIdsByMember(it.id).toSet() }
+        MealPlanDiagnostics.diagnose(members, meals, preferences)?.let {
+            throw ExplainedMealPlanException("No se puede generar la semana. " +
+                MealPlanDiagnostics.message(it, members) + " El plan guardado no se modifica.")
+        }
         val rows = com.comiditas.familia.domain.optimizer.WeekMealPlanGenerator(optimizer)
             .generate(selectedDate, members, meals, preferences, random) ?: return WeekResult.IMPOSSIBLE
         val start = com.comiditas.familia.domain.optimizer.WeekMealPlanGenerator.monday(selectedDate)
@@ -65,6 +71,17 @@ class AssignMealsUseCase @Inject constructor(
         val members = memberRepository.getAll().first()
         val meals = mealRepository.getAll().first()
         val preferences = members.associate { it.id to preferenceRepository.getLikedMealIdsByMember(it.id).toSet() }
+        val error = DayAssignmentValidator.error("draft", draft.map { (member, meal) ->
+            DayAssignment("draft", member, meal)
+        }, members, meals, preferences)
+        if (error != null) throw ExplainedMealPlanException(
+            "$error Revisa el borrador antes de sustituir. El plan guardado no se modifica.")
+        if (oldMealId !in draft.values) throw ExplainedMealPlanException(
+            "La comida que quieres sustituir no está en el borrador. El plan guardado no se modifica.")
+        val oldMeal = meals.first { it.id == oldMealId }
+        MealPlanDiagnostics.diagnose(members, meals.filterNot { it.id == oldMealId }, preferences)?.let {
+            throw ExplainedMealPlanException(MealPlanDiagnostics.replacementMessage(it, members, oldMeal))
+        }
         return com.comiditas.familia.domain.optimizer.MealReplacementPlanner.plan(
             members.map { it.id }, meals.map { it.id }, preferences, draft, oldMealId)
     }
@@ -75,6 +92,10 @@ class AssignMealsUseCase @Inject constructor(
         val members = memberRepository.getAll().first()
         val meals = mealRepository.getAll().first()
         val preferences = members.associate { it.id to preferenceRepository.getLikedMealIdsByMember(it.id).toSet() }
+        MealPlanDiagnostics.diagnose(members, meals, preferences)?.let {
+            throw ExplainedMealPlanException("No se puede generar el día. " +
+                MealPlanDiagnostics.message(it, members) + " El plan guardado no se modifica.")
+        }
         val assignment = optimizer.optimize(members, meals, preferences, Random(System.currentTimeMillis())) ?: return false
         saveDay(date, assignment.assignments.flatMap { (mealId, memberIds) ->
             memberIds.map { DayAssignment(date, it, mealId) }

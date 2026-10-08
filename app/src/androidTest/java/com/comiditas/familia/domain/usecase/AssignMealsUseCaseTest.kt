@@ -105,7 +105,12 @@ class AssignMealsUseCaseTest {
         preferences.setPreference(2, 1, false)
         preferences.setPreference(2, 2, true)
         preferences.setPreference(3, 3, true)
-        assertEquals(AssignMealsUseCase.WeekResult.IMPOSSIBLE, useCase.generateWeek(weekStart, true))
+        try {
+            useCase.generateWeek(weekStart, true)
+            fail("Explained infeasibility expected")
+        } catch (error: com.comiditas.familia.domain.validation.ExplainedMealPlanException) {
+            assertTrue(error.message!!.contains("gustos compartidos"))
+        }
         assertEquals(weekRows(), storedWeek())
     }
 
@@ -153,6 +158,47 @@ class AssignMealsUseCaseTest {
             fail("Invalid range must be rejected")
         } catch (_: IllegalArgumentException) { }
         assertEquals(weekRows(), storedWeek())
+    }
+
+    @Test fun unavailableLikesPreserveDayAndWeek() = runBlocking {
+        seedWeek()
+        MealPreferenceRepository(database.mealPreferenceDao()).setPreference(1, 1, false)
+        val actions: List<suspend () -> Unit> = listOf(
+            { useCase.assignRandomly("day"); Unit },
+            { useCase.generateWeek(weekStart, true); Unit }
+        )
+        for (action in actions) {
+            try { action(); fail("Explained failure expected") }
+            catch (error: com.comiditas.familia.domain.validation.ExplainedMealPlanException) {
+                assertTrue(error.message!!.contains("Member 1"))
+                assertTrue(error.message!!.contains("El plan guardado no se modifica"))
+            }
+            assertEquals(original, repository.getByDate("day").sortedBy { it.memberId })
+            assertEquals(weekRows(), storedWeek())
+        }
+    }
+
+    @Test fun replacementValidatesDraftBeforeDiagnosingAlternatives() = runBlocking {
+        val validDraft = original.associate { it.memberId to it.mealId }
+        val attempts = listOf(
+            validDraft to "otra comida disponible",
+            mapOf(1L to 1L) to "exactamente una comida",
+            mapOf(1L to 2L, 2L to 1L) to "que le guste"
+        )
+        for ((draft, expected) in attempts) {
+            val frozen = draft.toMap()
+            try { useCase.replacementProposals(draft, 1); fail("Explained failure expected") }
+            catch (error: com.comiditas.familia.domain.validation.ExplainedMealPlanException) {
+                assertTrue(error.message!!, error.message!!.contains(expected))
+            }
+            assertEquals(frozen, draft)
+            assertEquals(original, repository.getByDate("day").sortedBy { it.memberId })
+        }
+        try { useCase.replacementProposals(validDraft, 2); fail("Missing old meal expected") }
+        catch (error: com.comiditas.familia.domain.validation.ExplainedMealPlanException) {
+            assertTrue(error.message!!.contains("no está en el borrador"))
+        }
+        assertEquals(original, repository.getByDate("day").sortedBy { it.memberId })
     }
 
     @Test fun validReplacementAndExplicitClear() = runBlocking {

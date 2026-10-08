@@ -413,7 +413,7 @@ internal fun DayDetailDialog(
                 if (changingMeal != null) {
                     if (isPreparing) Text("Preparando alternativas…")
                     preparationError?.let { Text(it, color = MaterialTheme.colorScheme.error) }
-                    if (options?.isEmpty() == true) Text("No hay alternativas válidas para este día.")
+                    if (options?.isEmpty() == true) Text("No se encontraron alternativas. Revisa las comidas y los gustos. El plan guardado no se modifica.")
                     Column(Modifier.verticalScroll(rememberScrollState())) {
                         val visible = selectedProposal?.let { listOf(it) } ?: options.orEmpty()
                         visible.forEach { proposal ->

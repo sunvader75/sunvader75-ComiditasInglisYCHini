@@ -176,6 +176,8 @@ class CalendarViewModel @Inject constructor(
                 if (version == preparationVersion && date == _selectedDate.value) onReady(proposals)
             } catch (error: CancellationException) {
                 throw error
+            } catch (error: com.comiditas.familia.domain.validation.ExplainedMealPlanException) {
+                if (version == preparationVersion) _replacementError.value = error.message
             } catch (error: Exception) {
                 if (version == preparationVersion) _replacementError.value =
                     "No se pudieron preparar alternativas. Inténtalo de nuevo."

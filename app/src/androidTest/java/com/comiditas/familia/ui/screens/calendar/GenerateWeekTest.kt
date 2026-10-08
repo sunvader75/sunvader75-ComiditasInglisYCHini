@@ -59,6 +59,22 @@ class GenerateWeekTest {
         database.close()
     }
 
+    @Test fun explainedGenerationFailureIsShownWithoutWrites() {
+        runBlocking {
+            MealPreferenceRepository(database.mealPreferenceDao()).setPreference(1, 1, false)
+        }
+        compose.runOnIdle {
+            viewModel.generateWeek(LocalDate.parse("2024-12-30"), true, {}, {})
+        }
+        val message = "No se puede generar la semana. Member: sin comidas disponibles que les gusten. " +
+            "Añade comidas o revisa sus gustos. El plan guardado no se modifica."
+        compose.waitUntil(5_000) {
+            compose.onAllNodes(androidx.compose.ui.test.hasText(message)).fetchSemanticsNodes().isNotEmpty()
+        }
+        compose.onNodeWithText(message).assertExists()
+        runBlocking { assertEquals(listOf(existing), repository.getByDate(existing.date)) }
+    }
+
     @Test fun crossMonthConfirmationCanBeCancelledWithoutWrites() {
         compose.onNodeWithText("Generar semana").performClick()
         compose.waitUntil(5_000) {

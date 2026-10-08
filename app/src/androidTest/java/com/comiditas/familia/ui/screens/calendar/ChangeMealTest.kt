@@ -52,6 +52,9 @@ class ChangeMealTest {
         useCase.saveDay(date.toString(), original)
         compose.setContent {
             MaterialTheme {
+                val preparationError = androidx.compose.runtime.remember {
+                    androidx.compose.runtime.mutableStateOf<String?>(null)
+                }
                 DayDetailDialog(date, listOf(FamilyMember(1, "Member 1", 0), FamilyMember(2, "Member 2", 0)),
                     listOf(Meal(1, "Meal 1"), Meal(2, "Meal 2")), original,
                     onDismiss = {}, isLoading = false, error = null, onRandomAssign = {},
@@ -59,14 +62,31 @@ class ChangeMealTest {
                         useCase.saveDay(date.toString(), draft.map { (member, meal) ->
                             DayAssignment(date.toString(), member, meal)
                         })
-                    } }, onClear = {}, isPreparing = false, preparationError = null,
-                    onPrepare = { draft, old, ready -> runBlocking { ready(useCase.replacementProposals(draft, old)) } },
+                    } }, onClear = {}, isPreparing = false, preparationError = preparationError.value,
+                    onPrepare = { draft, old, ready -> runBlocking {
+                        try { ready(useCase.replacementProposals(draft, old)) }
+                        catch (error: com.comiditas.familia.domain.validation.ExplainedMealPlanException) {
+                            preparationError.value = error.message
+                        }
+                    } },
                     onCancelReplacement = {})
             }
         }
     }
 
     @After fun tearDown() { database.close() }
+
+    @Test fun unavailableReplacementShowsNamedExplanationWithoutWrites() {
+        runBlocking {
+            MealPreferenceRepository(database.mealPreferenceDao()).setPreference(1, 2, false)
+        }
+        compose.onNodeWithText("Cambiar").performClick()
+        compose.onNodeWithText("No se puede sustituir «Meal 1»: Member 1 no tiene otra comida disponible que le guste. " +
+            "Revisa las comidas y los gustos. El plan guardado no se modifica.").assertExists()
+        runBlocking { assertEquals(original, repository.getByDate(date.toString()).sortedBy { it.memberId }) }
+        compose.onNodeWithText("Cancelar").performClick()
+        runBlocking { assertEquals(original, repository.getByDate(date.toString()).sortedBy { it.memberId }) }
+    }
 
     @Test fun dishLevelPreviewCancelThenExplicitConfirmation() {
         compose.onNodeWithText("Cambiar").performClick()
