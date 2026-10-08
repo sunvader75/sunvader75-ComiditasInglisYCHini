@@ -1,21 +1,23 @@
 [versions]
-agp = "8.13.2"
-kotlin = "1.9.22"
+agp = "8.7.3"
+kotlin = "2.0.21"
 coreKtx = "1.12.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
-lifecycleRuntimeKtx = "2.10.0"
+lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.9.3"
-composeBom = "2024.10.01"
+composeBom = "2024.09.00"
 room = "2.6.1"
-hilt = "2.50"
-hiltNavigationCompose = "1.1.0"
-ksp = "1.9.22-1.0.17"
-navigationCompose = "2.7.7"
-lifecycleRuntimeCompose = "2.10.0"
+hilt = "2.51.1"
+hiltNavigationCompose = "1.2.0"
+ksp = "2.0.21-1.0.25"
+navigationCompose = "2.8.3"
+lifecycleRuntimeCompose = "2.8.7"
+splashscreen = "1.0.1"
 
 [libraries]
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -46,4 +48,6 @@ androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lif
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
-
+kotlinCompose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
