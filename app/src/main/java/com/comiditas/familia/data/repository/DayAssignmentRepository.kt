@@ -25,6 +25,14 @@ class DayAssignmentRepository @Inject constructor(
         dao.replaceDay(date, assignments.map { DayAssignmentEntity(it.date, it.memberId, it.mealId) })
     }
 
+    suspend fun hasAssignmentsBetween(startDate: String, endDate: String): Boolean =
+        dao.countBetween(startDate, endDate) > 0
+
+    suspend fun replaceWeek(startDate: String, endDate: String,
+                            assignments: List<DayAssignment>, confirmed: Boolean): Boolean =
+        dao.replaceWeek(startDate, endDate,
+            assignments.map { DayAssignmentEntity(it.date, it.memberId, it.mealId) }, confirmed)
+
     suspend fun assign(date: String, memberId: Long, mealId: Long) {
         dao.insert(DayAssignmentEntity(date, memberId, mealId))
     }

@@ -78,15 +78,18 @@ class CalendarViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), CalendarUiState())
 
     fun selectDate(date: LocalDate) {
+        if (_isLoading.value) return
         _selectedDate.value = date
         _message.value = null
     }
 
     fun previousMonth() {
+        if (_isLoading.value) return
         _currentMonth.value = _currentMonth.value.minusMonths(1)
     }
 
     fun nextMonth() {
+        if (_isLoading.value) return
         _currentMonth.value = _currentMonth.value.plusMonths(1)
     }
 
@@ -130,6 +133,20 @@ class CalendarViewModel @Inject constructor(
 
     fun clearDay(date: LocalDate, onSuccess: () -> Unit) = persist(onSuccess) {
         assignMealsUseCase.clearDay(date.format(formatter))
+    }
+
+    fun prepareWeek(date: LocalDate, onReady: (Boolean) -> Unit) = persist({}) {
+        onReady(assignMealsUseCase.weekHasAssignments(date))
+    }
+
+    fun generateWeek(date: LocalDate, confirmed: Boolean, onSaved: () -> Unit,
+                     onConfirmationRequired: () -> Unit) = persist({}) {
+        when (assignMealsUseCase.generateWeek(date, confirmed)) {
+            AssignMealsUseCase.WeekResult.SAVED -> onSaved()
+            AssignMealsUseCase.WeekResult.CONFIRMATION_REQUIRED -> onConfirmationRequired()
+            AssignMealsUseCase.WeekResult.IMPOSSIBLE -> throw IllegalArgumentException(
+                "No hay un plan de hasta dos comidas que guste a todos.")
+        }
     }
 
     fun clearMessage() {

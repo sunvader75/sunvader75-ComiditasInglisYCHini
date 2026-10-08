@@ -71,11 +71,19 @@ fun CalendarScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var selectedDate by remember { mutableStateOf<LocalDate?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
+    var pendingWeek by remember { mutableStateOf<LocalDate?>(null) }
+    var weekHasAssignments by remember { mutableStateOf<Boolean?>(null) }
+    val weekStart = com.comiditas.familia.domain.optimizer.WeekMealPlanGenerator.monday(uiState.selectedDate)
+    val rangeFormatter = remember { DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale("es")) }
+
+    fun checkWeek(date: LocalDate) {
+        viewModel.prepareWeek(date) { weekHasAssignments = it }
+    }
 
     LaunchedEffect(uiState.message) {
         uiState.message?.let {
             snackbarHostState.showSnackbar(it)
-            if (selectedDate == null) viewModel.clearMessage()
+            if (selectedDate == null && pendingWeek == null) viewModel.clearMessage()
         }
     }
 
@@ -84,7 +92,7 @@ fun CalendarScreen(
             TopAppBar(
                 title = { Text("Calendario de Comidas") },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    IconButton(enabled = !uiState.isLoading && pendingWeek == null, onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
                     }
                 }
@@ -100,11 +108,22 @@ fun CalendarScreen(
         ) {
             MonthSelector(
                 currentMonth = uiState.currentMonth,
-                onPrevious = { viewModel.previousMonth() },
-                onNext = { viewModel.nextMonth() }
+                onPrevious = { if (!uiState.isLoading && pendingWeek == null) viewModel.previousMonth() },
+                onNext = { if (!uiState.isLoading && pendingWeek == null) viewModel.nextMonth() }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                enabled = !uiState.isLoading && selectedDate == null && pendingWeek == null,
+                onClick = {
+                    pendingWeek = weekStart
+                    weekHasAssignments = null
+                    viewModel.clearMessage()
+                    checkWeek(weekStart)
+                }
+            ) { Text("Generar semana") }
+            Text("${weekStart.format(rangeFormatter)} – ${weekStart.plusDays(6).format(rangeFormatter)}")
 
             WeekdayHeader()
 
@@ -114,11 +133,43 @@ fun CalendarScreen(
                 monthAssignments = uiState.monthAssignments,
                 selectedDate = uiState.selectedDate,
                 onDateSelected = { date ->
-                    viewModel.selectDate(date)
-                    selectedDate = date
+                    if (!uiState.isLoading && pendingWeek == null) {
+                        viewModel.selectDate(date)
+                        selectedDate = date
+                    }
                 }
             )
         }
+    }
+
+    pendingWeek?.let { start ->
+        AlertDialog(
+            onDismissRequest = { if (!uiState.isLoading) pendingWeek = null },
+            properties = androidx.compose.ui.window.DialogProperties(
+                dismissOnBackPress = !uiState.isLoading,
+                dismissOnClickOutside = !uiState.isLoading
+            ),
+            title = { Text(if (weekHasAssignments == true) "¿Reemplazar semana?" else "Generar semana") },
+            text = {
+                Column {
+                    Text("${start.format(rangeFormatter)} – ${start.plusDays(6).format(rangeFormatter)}")
+                    if (weekHasAssignments == true) Text("Se reemplazarán todos los planes de esta semana.")
+                    uiState.message?.let { Text(it, color = MaterialTheme.colorScheme.error) }
+                }
+            },
+            confirmButton = {
+                Button(enabled = !uiState.isLoading, onClick = {
+                    if (weekHasAssignments == null) checkWeek(start)
+                    else viewModel.generateWeek(start, weekHasAssignments == true,
+                        onSaved = { pendingWeek = null },
+                        onConfirmationRequired = { weekHasAssignments = true })
+                }) { Text(if (uiState.isLoading) "Guardando…" else if (weekHasAssignments == null)
+                    "Reintentar" else if (weekHasAssignments == true) "Reemplazar" else "Generar") }
+            },
+            dismissButton = {
+                TextButton(enabled = !uiState.isLoading, onClick = { pendingWeek = null }) { Text("Cancelar") }
+            }
+        )
     }
 
     selectedDate?.let { date ->

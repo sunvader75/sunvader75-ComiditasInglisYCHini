@@ -62,6 +62,75 @@ class AssignMealsUseCaseTest {
         assertEquals(original, repository.getByDate("day").sortedBy { it.memberId })
     }
 
+    private val weekStart = java.time.LocalDate.parse("2024-12-30")
+    private fun weekRows() = (0L..6L).flatMap { offset ->
+        original.map { it.copy(date = weekStart.plusDays(offset).toString()) }
+    }
+    private suspend fun storedWeek() = (0L..6L).flatMap {
+        repository.getByDate(weekStart.plusDays(it).toString()).sortedBy { row -> row.memberId }
+    }
+    private suspend fun seedWeek() {
+        assertTrue(repository.replaceWeek(weekStart.toString(), weekStart.plusDays(6).toString(), weekRows(), true))
+    }
+
+    @Test fun impossibleGenerationPreservesEntireWeek() = runBlocking {
+        seedWeek()
+        database.familyMemberDao().insert(FamilyMemberEntity(3, "Third", 0))
+        database.mealDao().insert(MealEntity(3, "Third meal"))
+        val preferences = MealPreferenceRepository(database.mealPreferenceDao())
+        preferences.setPreference(2, 1, false)
+        preferences.setPreference(2, 2, true)
+        preferences.setPreference(3, 3, true)
+        assertEquals(AssignMealsUseCase.WeekResult.IMPOSSIBLE, useCase.generateWeek(weekStart, true))
+        assertEquals(weekRows(), storedWeek())
+    }
+
+    @Test fun exactWeekReplacementPreservesNeighbors() = runBlocking {
+        seedWeek()
+        val before = weekStart.minusDays(1).toString()
+        val after = weekStart.plusDays(7).toString()
+        repository.assign(before, 1, 2)
+        repository.assign(after, 2, 2)
+        val replacement = weekRows().map { it.copy(mealId = 2) }
+        assertTrue(repository.replaceWeek(weekStart.toString(), weekStart.plusDays(6).toString(), replacement, true))
+        assertEquals(replacement, storedWeek())
+        assertEquals(listOf(DayAssignment(before, 1, 2)), repository.getByDate(before))
+        assertEquals(listOf(DayAssignment(after, 2, 2)), repository.getByDate(after))
+    }
+
+    @Test fun lateForeignKeyFailureRollsBackEntireWeek() = runBlocking {
+        seedWeek()
+        val proposal = weekRows().mapIndexed { index, row ->
+            if (index == 13) row.copy(mealId = 999) else row.copy(mealId = 2)
+        }
+        try {
+            repository.replaceWeek(weekStart.toString(), weekStart.plusDays(6).toString(), proposal, true)
+            fail("Foreign key failure expected")
+        } catch (_: android.database.sqlite.SQLiteConstraintException) { }
+        assertEquals(weekRows(), storedWeek())
+    }
+
+    @Test fun unconfirmedExistingAndRacingAssignmentsAreRefused() = runBlocking {
+        assertFalse(useCase.weekHasAssignments(weekStart))
+        // A writer arrives after the empty preflight, in the adjacent calendar month.
+        repository.assign("2025-01-05", 1, 2)
+        assertEquals(AssignMealsUseCase.WeekResult.CONFIRMATION_REQUIRED, useCase.generateWeek(weekStart, false))
+        assertEquals(listOf(DayAssignment("2025-01-05", 1, 2)), storedWeek())
+        assertTrue(useCase.weekHasAssignments(weekStart))
+        seedWeek()
+        assertEquals(AssignMealsUseCase.WeekResult.CONFIRMATION_REQUIRED, useCase.generateWeek(weekStart, false))
+        assertEquals(weekRows(), storedWeek())
+    }
+
+    @Test fun malformedRangeCannotDeleteWeek() = runBlocking {
+        seedWeek()
+        try {
+            repository.replaceWeek(weekStart.toString(), weekStart.plusDays(7).toString(), weekRows(), true)
+            fail("Invalid range must be rejected")
+        } catch (_: IllegalArgumentException) { }
+        assertEquals(weekRows(), storedWeek())
+    }
+
     @Test fun validReplacementAndExplicitClear() = runBlocking {
         MealPreferenceRepository(database.mealPreferenceDao()).setPreference(2, 2, true)
         val replacement = listOf(original[0], original[1].copy(mealId = 2))

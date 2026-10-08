@@ -23,6 +23,25 @@ class AssignMealsUseCase @Inject constructor(
     fun getAssignmentsBetween(startDate: String, endDate: String): Flow<List<DayAssignment>> =
         dayAssignmentRepository.getBetweenDates(startDate, endDate)
 
+    enum class WeekResult { SAVED, CONFIRMATION_REQUIRED, IMPOSSIBLE }
+
+    suspend fun weekHasAssignments(selectedDate: java.time.LocalDate): Boolean {
+        val start = com.comiditas.familia.domain.optimizer.WeekMealPlanGenerator.monday(selectedDate)
+        return dayAssignmentRepository.hasAssignmentsBetween(start.toString(), start.plusDays(6).toString())
+    }
+
+    suspend fun generateWeek(selectedDate: java.time.LocalDate, confirmed: Boolean,
+                             random: Random = Random.Default): WeekResult {
+        val members = memberRepository.getAll().first()
+        val meals = mealRepository.getAll().first()
+        val preferences = members.associate { it.id to preferenceRepository.getLikedMealIdsByMember(it.id).toSet() }
+        val rows = com.comiditas.familia.domain.optimizer.WeekMealPlanGenerator(optimizer)
+            .generate(selectedDate, members, meals, preferences, random) ?: return WeekResult.IMPOSSIBLE
+        val start = com.comiditas.familia.domain.optimizer.WeekMealPlanGenerator.monday(selectedDate)
+        return if (dayAssignmentRepository.replaceWeek(start.toString(), start.plusDays(6).toString(), rows, confirmed))
+            WeekResult.SAVED else WeekResult.CONFIRMATION_REQUIRED
+    }
+
     suspend fun assignManually(date: String, memberId: Long, mealId: Long) {
         val current = dayAssignmentRepository.getByDate(date)
         saveDay(date, current.filterNot { it.memberId == memberId } + DayAssignment(date, memberId, mealId))
