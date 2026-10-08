@@ -15,15 +15,17 @@ class WeekMealPlanGenerator(private val optimizer: MealAssignmentOptimizer = Mea
                  preferences: Map<Long, Set<Long>>, random: Random): List<DayAssignment>? {
         val start = monday(selectedDate)
         val rows = mutableListOf<DayAssignment>()
+        val usedMealIds = mutableSetOf<Long>()
         repeat(7) { offset ->
             val date = start.plusDays(offset.toLong()).toString()
-            val plan = optimizer.optimize(members, meals, preferences, random) ?: return null
+            val plan = optimizer.optimize(members, meals, preferences, random, usedMealIds) ?: return null
             val day = plan.assignments.flatMap { (meal, recipients) ->
                 recipients.map { DayAssignment(date, it, meal) }
             }
             if (com.comiditas.familia.domain.validation.DayAssignmentValidator.error(
                     date, day, members, meals, preferences) != null) return null
             rows.addAll(day)
+            usedMealIds.addAll(plan.assignments.keys)
         }
         return rows
     }

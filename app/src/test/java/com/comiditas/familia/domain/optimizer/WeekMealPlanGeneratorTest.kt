@@ -50,6 +50,29 @@ class WeekMealPlanGeneratorTest {
         assertNull(generator.generate(date, members, meals, members.associate { it.id to setOf(99L) }, Random(1)))
     }
 
+    @Test fun sevenSharedMealsAvoidRepeatsAndHistoryResets() {
+        val catalog = (1L..7L).map { Meal(it, "Meal $it") }
+        val preferences = members.associate { it.id to catalog.map { meal -> meal.id }.toSet() }
+        val date = LocalDate.parse("2025-01-01")
+        val constantRandom = object : Random() {
+            override fun nextBits(bitCount: Int): Int = 0
+        }
+        val rows = generator.generate(date, members, catalog, preferences, constantRandom)!!
+        assertEquals(7, rows.map { it.mealId }.distinct().size)
+        assertEquals(rows, generator.generate(date, members, catalog, preferences, constantRandom))
+        assertEquals((1L..7L).toSet(), preferences.getValue(1L))
+    }
+
+    @Test fun weeklyHistoryPrefersFreshSplitAfterSharedFirstDay() {
+        val preferences = mapOf(1L to setOf(1L, 2L), 2L to setOf(1L, 2L), 3L to setOf(1L, 3L))
+        val rows = generator.generate(LocalDate.parse("2025-01-01"), members, meals, preferences, Random(9))!!
+        val days = rows.groupBy { it.date }.values.toList()
+        assertEquals(setOf(1L), days[0].map { it.mealId }.toSet())
+        assertEquals(setOf(2L, 3L), days[1].map { it.mealId }.toSet())
+        assertEquals(21, rows.size)
+        days.drop(2).forEach { assertEquals(setOf(1L), it.map { row -> row.mealId }.toSet()) }
+    }
+
     @Test fun repeatedMealIsAllowedAllSevenDays() {
         val rows = generator.generate(LocalDate.parse("2025-01-01"), members.take(1), meals.take(1),
             mapOf(1L to setOf(1L)), Random(1))!!

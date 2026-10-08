@@ -19,7 +19,8 @@ class MealAssignmentOptimizer @Inject constructor() {
         members: List<FamilyMember>,
         meals: List<Meal>,
         preferences: Map<Long, Set<Long>>,
-        random: Random = Random.Default
+        random: Random = Random.Default,
+        usedMealIds: Set<Long> = emptySet()
     ): OptimizedAssignment? {
         if (members.size !in 1..3 || members.map { it.id }.distinct().size != members.size) return null
         val ids = members.map { it.id }
@@ -31,22 +32,53 @@ class MealAssignmentOptimizer @Inject constructor() {
             if (DayAssignmentValidator.error("", rows, members, meals, preferences) != null) return null
             return OptimizedAssignment(groups, meals.associateBy { it.id })
         }
+        // Keep optimal options per grouping, then choose uniformly among tied groupings.
+        // Shared dishes are represented once, with every recipient, never as two map keys.
+        val groupings = mutableListOf<List<Map<Long, List<Long>>>>()
+        var bestRepeated = Int.MAX_VALUE
+        var bestCount = Int.MAX_VALUE
+        fun consider(options: List<Map<Long, List<Long>>>) {
+            if (options.isEmpty()) return
+            val repeated = options.first().keys.count { it in usedMealIds }
+            val count = options.first().size
+            if (repeated < bestRepeated || repeated == bestRepeated && count < bestCount) {
+                groupings.clear()
+                bestRepeated = repeated
+                bestCount = count
+            }
+            if (repeated == bestRepeated && count == bestCount) groupings.add(options)
+        }
         val shared = common(ids)
-        if (shared.isNotEmpty()) return result(mapOf(shared.random(random) to ids))
+        if (shared.isNotEmpty()) {
+            val score = shared.minOf { if (it in usedMealIds) 1 else 0 }
+            consider(shared.filter { (if (it in usedMealIds) 1 else 0) == score }
+                .map { mapOf(it to ids) })
+        }
 
-        // At most three bipartitions; no Cartesian enumeration over meal triples.
+        // At most three bipartitions and O(M^2) pairs each, not meal triples.
         val splits = (1 until (1 shl ids.size)).filter { it and 1 != 0 && it != (1 shl ids.size) - 1 }
-            .shuffled(random)
         for (mask in splits) {
             val first = ids.filterIndexed { index, _ -> mask and (1 shl index) != 0 }
             val second = ids.filter { it !in first }
-            val firstMeals = common(first)
-            val secondMeals = common(second)
-            if (firstMeals.isNotEmpty() && secondMeals.isNotEmpty()) {
-                // With no global common meal these sets are disjoint.
-                return result(mapOf(firstMeals.random(random) to first, secondMeals.random(random) to second))
+            val options = mutableListOf<Map<Long, List<Long>>>()
+            var bestSplitRepeated = Int.MAX_VALUE
+            for (firstMeal in common(first)) {
+                for (secondMeal in common(second)) {
+                    // Equal IDs belong to the shared grouping, preserving all recipients.
+                    if (firstMeal == secondMeal) continue
+                    val repeated = listOf(firstMeal, secondMeal).count { it in usedMealIds }
+                    if (repeated < bestSplitRepeated) {
+                        options.clear()
+                        bestSplitRepeated = repeated
+                    }
+                    if (repeated == bestSplitRepeated) {
+                        options.add(mapOf(firstMeal to first, secondMeal to second))
+                    }
+                }
             }
+            consider(options)
         }
-        return null
+        if (groupings.isEmpty()) return null
+        return result(groupings.random(random).random(random))
     }
 }
