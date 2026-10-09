@@ -7,6 +7,8 @@ import javax.inject.Inject
 class ManagePreferencesUseCase @Inject constructor(
     private val repository: MealPreferenceRepository
 ) {
+    fun observeLikesByMeal(): Flow<Map<Long, Set<Long>>> = repository.observeLikesByMeal()
+
     fun getPreferences(memberId: Long): Flow<Map<Long, Boolean>> =
         repository.getByMember(memberId)
 

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.RestaurantMenu
 import androidx.compose.material3.Card
@@ -61,16 +60,9 @@ fun HomeScreen(
 
             MenuCard(
                 title = "Comidas",
-                subtitle = "Añade y edita las comidas disponibles",
+                subtitle = "Edita las comidas y a quién le gustan",
                 icon = { Icon(Icons.Default.RestaurantMenu, contentDescription = null) },
                 onClick = { onNavigate(Screen.Meals.route) }
-            )
-
-            MenuCard(
-                title = "Gustos",
-                subtitle = "Indica qué le gusta a cada miembro",
-                icon = { Icon(Icons.Default.Favorite, contentDescription = null) },
-                onClick = { onNavigate(Screen.Preferences.route) }
             )
 
             MenuCard(
@@ -83,7 +75,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = "Primero configura los miembros y las comidas, luego sus gustos, y finalmente planifica en el menú semanal.",
+                text = "Primero configura los miembros y las comidas con sus gustos, y finalmente planifica en el menú semanal.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(8.dp)

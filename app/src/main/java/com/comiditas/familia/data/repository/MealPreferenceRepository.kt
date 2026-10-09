@@ -11,6 +11,16 @@ import javax.inject.Singleton
 class MealPreferenceRepository @Inject constructor(
     private val dao: MealPreferenceDao
 ) {
+    fun observeLikesByMeal(): Flow<Map<Long, Set<Long>>> = dao.observeLikes().map { likes ->
+        likes.groupBy { it.mealId }.mapValues { (_, rows) -> rows.map { it.memberId }.toSet() }
+    }
+
+    // The caller owns the transaction spanning the meal name and this replacement.
+    internal suspend fun replaceLikes(mealId: Long, memberIds: Set<Long>) {
+        dao.deleteByMeal(mealId)
+        memberIds.forEach { memberId -> setPreference(memberId, mealId, true) }
+    }
+
     fun getByMember(memberId: Long): Flow<Map<Long, Boolean>> = dao.getByMember(memberId).map { list ->
         list.associate { it.mealId to it.liked }
     }

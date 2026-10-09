@@ -9,13 +9,11 @@ import com.comiditas.familia.ui.screens.calendar.CalendarScreen
 import com.comiditas.familia.ui.screens.home.HomeScreen
 import com.comiditas.familia.ui.screens.meals.MealsScreen
 import com.comiditas.familia.ui.screens.members.MembersScreen
-import com.comiditas.familia.ui.screens.preferences.PreferencesScreen
 
 sealed class Screen(val route: String) {
     data object Home : Screen("home")
     data object Members : Screen("members")
     data object Meals : Screen("meals")
-    data object Preferences : Screen("preferences")
     data object Calendar : Screen("calendar")
 }
 
@@ -35,12 +33,6 @@ fun NavGraph(navController: NavHostController) {
         }
         composable(Screen.Meals.route) {
             MealsScreen(
-                viewModel = hiltViewModel(),
-                onBack = { navController.popBackStack() }
-            )
-        }
-        composable(Screen.Preferences.route) {
-            PreferencesScreen(
                 viewModel = hiltViewModel(),
                 onBack = { navController.popBackStack() }
             )

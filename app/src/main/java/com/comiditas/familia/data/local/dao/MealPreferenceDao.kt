@@ -9,6 +9,12 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MealPreferenceDao {
+    @Query("SELECT * FROM meal_preferences WHERE liked = 1")
+    fun observeLikes(): Flow<List<MealPreferenceEntity>>
+
+    @Query("DELETE FROM meal_preferences WHERE mealId = :mealId")
+    suspend fun deleteByMeal(mealId: Long)
+
     @Query("SELECT * FROM meal_preferences WHERE memberId = :memberId")
     fun getByMember(memberId: Long): Flow<List<MealPreferenceEntity>>
 

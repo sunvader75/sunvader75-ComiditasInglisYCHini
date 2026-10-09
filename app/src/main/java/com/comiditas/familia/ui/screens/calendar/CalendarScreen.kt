@@ -100,8 +100,6 @@ fun CalendarScreen(
                 .padding(padding)
                 .padding(16.dp)
         ) {
-            Text("${weekStart.format(rangeFormatter)} – ${weekStart.plusDays(6).format(rangeFormatter)}")
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
