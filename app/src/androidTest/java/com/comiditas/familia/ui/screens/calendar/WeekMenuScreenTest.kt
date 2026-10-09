@@ -1,8 +1,18 @@
 package com.comiditas.familia.ui.screens.calendar
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.test.performScrollTo
+import com.comiditas.familia.ui.theme.ComiditasFamiliaTheme
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.comiditas.familia.data.model.*
@@ -31,6 +41,37 @@ class WeekMenuScreenTest {
         assertEquals(null, selected)
         compose.onNodeWithText("Arroz").performClick()
         assertEquals(start, selected)
+    }
+
+    @Test fun compactLargeTextWeekKeepsActionsAndLastDateReachable() {
+        var previous = 0
+        var next = 0
+        var generated = 0
+        var selected: LocalDate? = null
+        val state = CalendarUiState(weekStart = start,
+            week = WeekObservation(start, loaded = true))
+        compose.setContent {
+            val density = LocalDensity.current.density
+            CompositionLocalProvider(LocalDensity provides Density(density, 2f)) {
+                ComiditasFamiliaTheme {
+                    Box(Modifier.size(320.dp, 480.dp)) {
+                        WeekMenuContent(state, {}, { selected = it }, header = {
+                            WeekOverviewHeader(start, true, { previous++ }, { next++ }, { generated++ })
+                        })
+                    }
+                }
+            }
+        }
+        compose.onNodeWithText("Tu semana en la mesa").assertDoesNotExist()
+        compose.onNodeWithText("30/12/2024 – 05/01/2025").assertDoesNotExist()
+        compose.onNodeWithContentDescription("Semana anterior").performScrollTo().performClick()
+        compose.onNodeWithContentDescription("Semana siguiente").performScrollTo().performClick()
+        compose.onNodeWithText("Generar semana").performScrollTo().performClick()
+        compose.onNodeWithText("Domingo 05/01/2025").performScrollTo().performClick()
+        assertEquals(1, previous)
+        assertEquals(1, next)
+        assertEquals(1, generated)
+        assertEquals(start.plusDays(6), selected)
     }
 
     @Test fun loadingErrorRetryAndLoadedEmptyAreDistinct() {

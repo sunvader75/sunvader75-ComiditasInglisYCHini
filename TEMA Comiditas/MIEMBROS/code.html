@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Miembros de la Familia - Comiditas Inglis &amp; Chini</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Roboto Flex Font -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary": "#ffffff",
+            "on-secondary-fixed": "#1e192b",
+            "inverse-primary": "#cfbdff",
+            "on-primary-container": "#dfd2ff",
+            "background": "#fef7ff",
+            "on-tertiary-container": "#ffcbda",
+            "secondary": "#625b71",
+            "on-surface-variant": "#494551",
+            "error": "#ba1a1a",
+            "on-secondary-container": "#686177",
+            "outline": "#7a7582",
+            "surface-container-highest": "#e7e0ec",
+            "tertiary-container": "#7d5260",
+            "tertiary-fixed": "#ffd9e3",
+            "surface": "#fef7ff",
+            "surface-tint": "#6650a4",
+            "on-tertiary-fixed-variant": "#633b48",
+            "tertiary-fixed-dim": "#eeb8c8",
+            "on-error": "#ffffff",
+            "on-secondary-fixed-variant": "#4a4358",
+            "primary-fixed-dim": "#cfbdff",
+            "tertiary": "#633b48",
+            "primary": "#4e378a",
+            "inverse-surface": "#322f38",
+            "inverse-on-surface": "#f6eefb",
+            "on-primary": "#ffffff",
+            "on-primary-fixed": "#21005d",
+            "surface-container-lowest": "#ffffff",
+            "primary-container": "#6650a4",
+            "secondary-fixed": "#e8def9",
+            "on-tertiary": "#ffffff",
+            "on-background": "#1d1a23",
+            "surface-container": "#f3ebf8",
+            "surface-bright": "#fef7ff",
+            "on-primary-fixed-variant": "#4e388a",
+            "secondary-fixed-dim": "#ccc2dc",
+            "primary-fixed": "#e8ddff",
+            "surface-container-low": "#f8f1fe",
+            "on-tertiary-fixed": "#31111d",
+            "error-container": "#ffdad6",
+            "surface-variant": "#e7e0ec",
+            "surface-dim": "#dfd7e4",
+            "surface-container-high": "#ede5f2",
+            "secondary-container": "#e8def9",
+            "on-surface": "#1d1a23",
+            "outline-variant": "#cac4d2",
+            "on-error-container": "#93000a"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-desktop": "2rem",
+            "space-sm": "0.5rem",
+            "gutter-desktop": "1.5rem",
+            "space-lg": "1rem",
+            "margin": "1rem",
+            "space-md": "0.75rem",
+            "space-xl": "1.5rem",
+            "space-xs": "0.25rem",
+            "gutter": "1rem"
+          },
+          "fontFamily": {
+            "body-md": ["Roboto Flex"],
+            "headline-md": ["Roboto Flex"],
+            "label-md": ["Roboto Flex"],
+            "display-lg-mobile": ["Roboto Flex"],
+            "title-lg": ["Roboto Flex"],
+            "title-sm": ["Roboto Flex"],
+            "body-sm": ["Roboto Flex"],
+            "display-lg": ["Roboto Flex"],
+            "body-lg": ["Roboto Flex"],
+            "label-sm": ["Roboto Flex"],
+            "label-lg": ["Roboto Flex"],
+            "title-md": ["Roboto Flex"]
+          },
+          "fontSize": {
+            "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+            "headline-md": ["28px", { "lineHeight": "36px", "letterSpacing": "0px", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+            "display-lg-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.25px", "fontWeight": "400" }],
+            "title-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "0px", "fontWeight": "400" }],
+            "title-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.4px", "fontWeight": "400" }],
+            "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+            "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+            "title-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500" }]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill-icon {
+      font-variation-settings: 'FILL' 1;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex flex-col selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TOP APP BAR (Shared Component Anchor) -->
+<header class="sticky top-0 z-40 bg-surface shadow-sm">
+<div class="flex justify-between items-center w-full px-space-lg py-space-sm max-w-7xl mx-auto">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-fixed flex items-center justify-center bg-secondary-container text-on-secondary-container shrink-0">
+<img class="w-full h-full object-cover" data-alt="A charming illustrated family portrait avatar on a soft pastel background showing a warm, cheerful domestic couple in modern minimalist flat art style with soft lavender and warm iris tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDU_pMrZImIOmRYdBvh6XRWUpyHzLXAglCOmINagidLlpfA_iV-J7b9nFjqmjZh8nbm8tWzeXolavOUSZP8r1y_vQMvKXth_0arJjUWWELrDB7u-P-7zl6EIX77MaKFvAvZLpgI_9Te1PQhQU_ipb0M-XhqBnI42ZEoppMlZ-NNkLSpJ1_2L-slPww-JyhnCpfD8FQlqUrfeYcNklfJcLJomwVj4H_lJNY__d1y0eaAZ7dxqmMXGQt9"/>
+</div>
+<div>
+<span class="block text-title-lg font-title-lg font-bold text-primary tracking-tight">Comiditas Inglis &amp; Chini</span>
+<span class="block text-body-sm font-body-sm text-on-surface-variant">Miembros de la Familia</span>
+</div>
+</div>
+<!-- Trailing Action -->
+<div class="flex items-center gap-space-sm">
+<button aria-label="Notificaciones" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container active:scale-95 transition-all duration-150" type="button">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</div>
+</header>
+<!-- MAIN VIEWPORT CONTENT -->
+<main class="flex-1 max-w-7xl w-full mx-auto px-space-lg py-space-md mb-24 md:mb-12">
+<!-- HERO SUMMARY & QUICK ACTION BAR -->
+<section class="bg-surface-container-low rounded-xl p-space-lg mb-space-lg shadow-sm border border-outline-variant/30 flex flex-col md:flex-row md:items-center md:justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-full bg-secondary-container text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary">diversity_3</span>
+</div>
+<div>
+<h1 class="text-title-lg font-title-lg font-bold text-on-surface">4 miembros en la mesa familiar</h1>
+<p class="text-body-md font-body-md text-on-surface-variant">Preferencias, gustos compartidos y restricciones actualizadas para el menú de la semana.</p>
+</div>
+</div>
+<!-- Primary Action CTA -->
+<button class="inline-flex items-center justify-center gap-space-xs rounded-full bg-primary-container hover:bg-primary text-on-primary px-6 py-2.5 min-h-[48px] text-label-lg font-label-lg shadow-sm active:scale-95 transition-all" onclick="toggleModal(true)" type="button">
+<span class="material-symbols-outlined">add</span>
+<span>Añadir Miembro</span>
+</button>
+</section>
+<!-- BENTO GRID: FAMILY MEMBERS CARDS & PREFERENCE HIGHLIGHTS -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-md">
+<!-- MEMBER CARD 1: INGLIS (Primary Care / Cook) -->
+<article class="lg:col-span-6 bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/40 hover:shadow-md transition-shadow flex flex-col justify-between">
+<div>
+<!-- Header with Avatar and Role -->
+<div class="flex items-start justify-between mb-space-md">
+<div class="flex items-center gap-space-md">
+<div class="relative">
+<div class="w-14 h-14 rounded-full overflow-hidden border-2 border-primary">
+<img class="w-full h-full object-cover" data-alt="A warm, friendly portrait illustration of a smiling woman with glasses, light-drenched cozy domestic aesthetic, soft iris violet background, warm lighting and contemporary vector art detailing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrnLGtcdV7b3TxwljfA2VCEdQJD_Y42SJlVa-2MXq0Y_9Orn8RA3SYCyxIZfxNxcSl3hw23HiC5OlWzceE-FE4wObSRywr3Zk-psqJvmzcXIETBOqIpn7Z1aGf9INtyxHRPbWnEbqAYA2skCTguNV5FibSm-Qk-sxl0Wilv8q5pwV-YiQsu0raEXDKfOyoO9D-ipUGz1GBfHfVutbVa6DRvUhVPwBySPq6eWaz7j8i3TbpLlSPeL-w"/>
+</div>
+<!-- Member Assignment Dot -->
+<span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-primary rounded-full border-2 border-surface-container-lowest"></span>
+</div>
+<div>
+<h2 class="text-title-md font-title-md font-bold text-on-surface">Inglis</h2>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Mamá &amp; Chef Principal</span>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="flex items-center gap-space-xs">
+<button aria-label="Editar Inglis" class="w-9 h-9 rounded-full flex items-center justify-center text-primary hover:bg-surface-container active:scale-95 transition-all" onclick="toggleModal(true)" title="Editar perfil">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button aria-label="Eliminar Inglis" class="w-9 h-9 rounded-full flex items-center justify-center text-error hover:bg-error-container active:scale-95 transition-all" title="Eliminar">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<!-- Section: Favorite Dishes -->
+<div class="mb-space-md">
+<span class="block text-label-md font-label-md text-on-surface-variant mb-space-xs">Platos favoritos:</span>
+<div class="flex flex-wrap gap-space-xs">
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[16px]">favorite</span> Lasaña de Verduras
+              </span>
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[16px]">favorite</span> Risotto de Setas
+              </span>
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[16px]">favorite</span> Tarta de Limón
+              </span>
+</div>
+</div>
+<!-- Section: Restrictions / Allergies -->
+<div class="p-space-sm bg-surface-container rounded-lg">
+<span class="block text-label-md font-label-md text-on-surface-variant mb-1">Restricciones / No le gusta:</span>
+<div class="flex flex-wrap items-center gap-space-xs">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[14px]">block</span> Sin Cilantro
+              </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[14px]">block</span> Comida poco picante
+              </span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-surface-container flex items-center justify-between text-body-sm font-body-sm text-outline">
+<span>Menús programados: 7 esta semana</span>
+<button class="text-primary font-medium hover:underline text-label-md font-label-md" onclick="toggleModal(true)">Editar preferencias</button>
+</div>
+</article>
+<!-- MEMBER CARD 2: CHINI -->
+<article class="lg:col-span-6 bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/40 hover:shadow-md transition-shadow flex flex-col justify-between">
+<div>
+<!-- Header with Avatar and Role -->
+<div class="flex items-start justify-between mb-space-md">
+<div class="flex items-center gap-space-md">
+<div class="relative">
+<div class="w-14 h-14 rounded-full overflow-hidden border-2 border-tertiary">
+<img class="w-full h-full object-cover" data-alt="Warm and approachable digital vector illustration of a man with a friendly smile, neat short hair, crisp clean domestic mood, warm earthy and berry tones with natural lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXYfX-L8uZKPJvtyZpPBjNJNqBwg59pD7fE7255GaSHwohk7V1Tmy25z19aoYLmYRRH6-Fr79nn13m0c-lxJIXqu6Pqa6uoNvi0GZu6e7orBcOId456CGpN7Fi4Jz53POD2vyeDV1INfuCMoHf1D_7kRoOwm4d7lJevj9F0fCqkUKcglcOfoy2AJJtzwGgm6MTwh7lcrFvgWAtIXOgB5M0coea9uLgicEO-BQUF7hawc-hrw8W_LP7"/>
+</div>
+<!-- Member Assignment Dot -->
+<span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-tertiary rounded-full border-2 border-surface-container-lowest"></span>
+</div>
+<div>
+<h2 class="text-title-md font-title-md font-bold text-on-surface">Chini</h2>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Papá &amp; Maestro Grill</span>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="flex items-center gap-space-xs">
+<button aria-label="Editar Chini" class="w-9 h-9 rounded-full flex items-center justify-center text-primary hover:bg-surface-container active:scale-95 transition-all" onclick="toggleModal(true)" title="Editar perfil">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button aria-label="Eliminar Chini" class="w-9 h-9 rounded-full flex items-center justify-center text-error hover:bg-error-container active:scale-95 transition-all" title="Eliminar">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<!-- Section: Favorite Dishes -->
+<div class="mb-space-md">
+<span class="block text-label-md font-label-md text-on-surface-variant mb-space-xs">Platos favoritos:</span>
+<div class="flex flex-wrap gap-space-xs">
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[16px]">favorite</span> Paella Marinera
+              </span>
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[16px]">favorite</span> Guiso de Lentejas
+              </span>
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[16px]">favorite</span> Asado de Tira
+              </span>
+</div>
+</div>
+<!-- Section: Restrictions / Allergies -->
+<div class="p-space-sm bg-error-container/40 rounded-lg">
+<span class="block text-label-md font-label-md text-error mb-1 font-medium">Alergias identificadas:</span>
+<div class="flex flex-wrap items-center gap-space-xs">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[14px]">warning</span> Alergia a Frutos Secos
+              </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[14px]">block</span> Evitar lácteos pesados
+              </span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-surface-container flex items-center justify-between text-body-sm font-body-sm text-outline">
+<span>Menús programados: 7 esta semana</span>
+<button class="text-primary font-medium hover:underline text-label-md font-label-md" onclick="toggleModal(true)">Editar preferencias</button>
+</div>
+</article>
+<!-- MEMBER CARD 3: LUCAS -->
+<article class="lg:col-span-6 bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/40 hover:shadow-md transition-shadow flex flex-col justify-between">
+<div>
+<!-- Header with Avatar and Role -->
+<div class="flex items-start justify-between mb-space-md">
+<div class="flex items-center gap-space-md">
+<div class="relative">
+<div class="w-14 h-14 rounded-full overflow-hidden border-2 border-secondary">
+<img class="w-full h-full object-cover" data-alt="Playful cheerful boy avatar illustration in soft clean lines, cheerful expression, light-drenched breakfast kitchen atmosphere, modern clean pastel tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdBNFmmbnpmfmu6vl7Aw8-eAh5FSMn6TuBs7-S35saCP9LYlGnP_0Qxf7fc9KqqbNGw4-JHWcksmN6LqbHpF_LShhCVXjBlCvN42OigPhj2OlKpcOi1IzUZCXByVLP1MpIGRmWdVSfM_Po5M0pbjz2QCsCDcYXDij6MajFmYh1pJZPuNgN2OxcloEodQkXvkWlGIYIhxTyNzr9_BJRQG7EYw1FrS-w-s0rAhMjVWND8PqsxsB5FGmN"/>
+</div>
+<!-- Member Assignment Dot -->
+<span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-secondary rounded-full border-2 border-surface-container-lowest"></span>
+</div>
+<div>
+<h2 class="text-title-md font-title-md font-bold text-on-surface">Lucas</h2>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Hijo Mayor (8 años)</span>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="flex items-center gap-space-xs">
+<button aria-label="Editar Lucas" class="w-9 h-9 rounded-full flex items-center justify-center text-primary hover:bg-surface-container active:scale-95 transition-all" onclick="toggleModal(true)" title="Editar perfil">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button aria-label="Eliminar Lucas" class="w-9 h-9 rounded-full flex items-center justify-center text-error hover:bg-error-container active:scale-95 transition-all" title="Eliminar">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<!-- Section: Favorite Dishes -->
+<div class="mb-space-md">
+<span class="block text-label-md font-label-md text-on-surface-variant mb-space-xs">Platos favoritos:</span>
+<div class="flex flex-wrap gap-space-xs">
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[16px]">favorite</span> Milanesa con Puré
+              </span>
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[16px]">favorite</span> Fideos con Pesto
+              </span>
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[16px]">favorite</span> Croquetas de Jamón
+              </span>
+</div>
+</div>
+<!-- Section: Restrictions / Allergies -->
+<div class="p-space-sm bg-surface-container rounded-lg">
+<span class="block text-label-md font-label-md text-on-surface-variant mb-1">Restricciones / No le gusta:</span>
+<div class="flex flex-wrap items-center gap-space-xs">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[14px]">block</span> Cero Cebolla visible
+              </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[14px]">block</span> Sin Pescado azul
+              </span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-surface-container flex items-center justify-between text-body-sm font-body-sm text-outline">
+<span>Menús programados: 6 esta semana</span>
+<button class="text-primary font-medium hover:underline text-label-md font-label-md" onclick="toggleModal(true)">Editar preferencias</button>
+</div>
+</article>
+<!-- MEMBER CARD 4: SOFÍA -->
+<article class="lg:col-span-6 bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/40 hover:shadow-md transition-shadow flex flex-col justify-between">
+<div>
+<!-- Header with Avatar and Role -->
+<div class="flex items-start justify-between mb-space-md">
+<div class="flex items-center gap-space-md">
+<div class="relative">
+<div class="w-14 h-14 rounded-full overflow-hidden border-2 border-primary-fixed-dim">
+<img class="w-full h-full object-cover" data-alt="A sweet, bright portrait illustration of a little girl with curly hair, gentle smiling face, bright natural indoor culinary setting with lilac and warm creamy tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6slgBSFL1IFV5VyKk0LETOJsVhVDw22OmFdR3T_0mWNpEupcXAGyOxza5wlpJ8LN65zZ03xPQNHKlTbElxbJcQU9kLmAR8w2H_Sz_pTW6ekJtcDZaDCuhWt4uUZt-lKTaBKKmNYoDMu11qr8RFozr_jPtT0yeJNxMas-w7ZDSY2B9wiaUtlVjuAbNvk8bmhxhVm4QNt2VaBhhdHTqTA7sH5zH18Ux5DZ6KaaUC2vqZrVz_s-Wv_BZ"/>
+</div>
+<!-- Member Assignment Dot -->
+<span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-primary-fixed-dim rounded-full border-2 border-surface-container-lowest"></span>
+</div>
+<div>
+<h2 class="text-title-md font-title-md font-bold text-on-surface">Sofía</h2>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Hija Menor (5 años)</span>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="flex items-center gap-space-xs">
+<button aria-label="Editar Sofía" class="w-9 h-9 rounded-full flex items-center justify-center text-primary hover:bg-surface-container active:scale-95 transition-all" onclick="toggleModal(true)" title="Editar perfil">
+<span class="material-symbols-outlined">edit</span>
+</button>
+<button aria-label="Eliminar Sofía" class="w-9 h-9 rounded-full flex items-center justify-center text-error hover:bg-error-container active:scale-95 transition-all" title="Eliminar">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<!-- Section: Favorite Dishes -->
+<div class="mb-space-md">
+<span class="block text-label-md font-label-md text-on-surface-variant mb-space-xs">Platos favoritos:</span>
+<div class="flex flex-wrap gap-space-xs">
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[16px]">favorite</span> Macarrones con Queso
+              </span>
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[16px]">favorite</span> Sopa de Estrellitas
+              </span>
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[16px]">favorite</span> Crepes de Fruta
+              </span>
+</div>
+</div>
+<!-- Section: Restrictions / Allergies -->
+<div class="p-space-sm bg-surface-container rounded-lg">
+<span class="block text-label-md font-label-md text-on-surface-variant mb-1">Restricciones / No le gusta:</span>
+<div class="flex flex-wrap items-center gap-space-xs">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[14px]">block</span> Sin Pimientos
+              </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[14px]">block</span> Texturas fibrosas
+              </span>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-surface-container flex items-center justify-between text-body-sm font-body-sm text-outline">
+<span>Menús programados: 7 esta semana</span>
+<button class="text-primary font-medium hover:underline text-label-md font-label-md" onclick="toggleModal(true)">Editar preferencias</button>
+</div>
+</article>
+</div>
+</main>
+<!-- MODAL DIALOG: CREAR / EDITAR MIEMBRO FAMILIAR -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-space-md bg-inverse-surface/40 backdrop-blur-sm transition-opacity duration-200" id="member-modal">
+<div class="bg-surface-container-high rounded-xl max-w-lg w-full p-space-lg shadow-2xl border border-outline-variant/30 flex flex-col max-h-[90vh]">
+<!-- Modal Header -->
+<div class="flex items-center justify-between pb-space-sm border-b border-outline-variant/30">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary">person_add</span>
+<h2 class="text-title-lg font-title-lg text-on-surface font-semibold">Editar Miembro Familiar</h2>
+</div>
+<button aria-label="Cerrar modal" class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container active:scale-95" onclick="toggleModal(false)" type="button">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Modal Body (Scrollable form) -->
+<form class="overflow-y-auto py-space-md space-y-space-md pr-1" onsubmit="event.preventDefault(); toggleModal(false);">
+<!-- Nombre input -->
+<div>
+<label class="block text-body-sm font-body-sm text-on-surface-variant mb-1" for="memberName">Nombre</label>
+<div class="relative">
+<input class="w-full h-12 rounded-lg border border-outline bg-surface-container-lowest px-space-md text-body-md font-body-md text-on-surface focus:outline-none focus:border-2 focus:border-primary" id="memberName" type="text" value="Lucas"/>
+</div>
+</div>
+<!-- Parentesco o Rol -->
+<div>
+<label class="block text-body-sm font-body-sm text-on-surface-variant mb-1" for="memberRole">Rol / Parentesco</label>
+<input class="w-full h-12 rounded-lg border border-outline bg-surface-container-lowest px-space-md text-body-md font-body-md text-on-surface focus:outline-none focus:border-2 focus:border-primary" id="memberRole" type="text" value="Hijo Mayor (8 años)"/>
+</div>
+<!-- Selector de Color e Identidad -->
+<div>
+<label class="block text-body-sm font-body-sm text-on-surface-variant mb-2">Color de identificación en el calendario</label>
+<div class="flex items-center gap-space-md">
+<!-- Swatches (40px) -->
+<button aria-label="Color Violeta" class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white ring-2 ring-offset-2 ring-primary" type="button">
+<span class="material-symbols-outlined text-[20px]">check</span>
+</button>
+<button aria-label="Color Borgoña" class="w-10 h-10 rounded-full bg-tertiary flex items-center justify-center text-white" type="button"></button>
+<button aria-label="Color Púrpura suave" class="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-white" type="button"></button>
+<button aria-label="Color Lila claro" class="w-10 h-10 rounded-full bg-primary-fixed-dim flex items-center justify-center text-white" type="button"></button>
+</div>
+</div>
+<!-- Avatar selector preview -->
+<div>
+<span class="block text-body-sm font-body-sm text-on-surface-variant mb-2">Avatar representativo</span>
+<div class="flex items-center gap-space-md">
+<div class="w-14 h-14 rounded-full overflow-hidden border-2 border-primary bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Playful cheerful child avatar icon, clean vector graphic portrait, warm modern flat design style on soft light violet palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDNAxMU_6J6SH4PZSVXHc3111PzF62k7gtFprlmtsRxxdcKxAJBM8YNxeRb5RSIZk-pBFksbT5JmSqEN3Bqz6L8YhmhobZGLE7-hdd_qM7ivGt2UpsRGmWpku_orPdFniXyMzwx9oL-txLmFw_zinzZzeaElHs02C7kCJAPIlLgLzqHdLDIY95n6DWX4pDYWKRoED_op-cT2PF6JP2MDapvv4PkAN0ZiP-lA885dtE7KjVntdMxTKY-"/>
+</div>
+<button class="h-10 px-4 rounded-full border border-outline text-primary text-label-md font-label-md hover:bg-surface-container active:scale-95 transition-all" type="button">
+              Cambiar Ilustración
+            </button>
+</div>
+</div>
+<!-- Gustos / Platos Favoritos (Filter chips) -->
+<div>
+<label class="block text-body-sm font-body-sm text-on-surface-variant mb-1">¿Qué comidas le encantan?</label>
+<div class="flex flex-wrap gap-space-xs mt-1">
+<button class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary-container text-on-primary text-label-sm font-label-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">check</span> Milanesa con Puré
+            </button>
+<button class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary-container text-on-primary text-label-sm font-label-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">check</span> Pasta al Pesto
+            </button>
+<button class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-outline text-on-surface-variant text-label-sm font-label-sm hover:bg-surface-container" type="button">
+<span class="material-symbols-outlined text-[16px]">add</span> + Añadir plato
+            </button>
+</div>
+</div>
+<!-- Alergias o Restricciones -->
+<div>
+<label class="block text-body-sm font-body-sm text-on-surface-variant mb-1" for="restrictions">Alergias o ingredientes no deseados</label>
+<input class="w-full h-12 rounded-lg border border-outline bg-surface-container-lowest px-space-md text-body-md font-body-md text-on-surface focus:outline-none focus:border-2 focus:border-primary" id="restrictions" placeholder="Ej. Frutos secos, lactosa, pimientos..." type="text" value="Cebolla en trozos, Pescado azul"/>
+</div>
+<!-- Modal Actions -->
+<div class="pt-space-md flex items-center justify-end gap-space-sm border-t border-outline-variant/30">
+<button class="px-6 py-2.5 rounded-full text-primary hover:bg-surface-container text-label-lg font-label-lg transition-colors" onclick="toggleModal(false)" type="button">
+            Cancelar
+          </button>
+<button class="px-6 py-2.5 rounded-full bg-primary-container hover:bg-primary text-on-primary text-label-lg font-label-lg shadow-sm active:scale-95 transition-all" type="submit">
+            Guardar
+          </button>
+</div>
+</form>
+</div>
+</div>
+<!-- FLOATING ACTION BUTTON (Enforces Roster Rule / Quick Add) -->
+<aside class="fixed bottom-20 right-4 md:bottom-8 md:right-8 z-30">
+<button aria-label="Añadir miembro familiar" class="w-14 h-14 rounded-2xl bg-primary-container text-on-primary flex items-center justify-center shadow-lg hover:shadow-xl active:scale-95 transition-all duration-150" onclick="toggleModal(true)" type="button">
+<span class="material-symbols-outlined text-[28px]">person_add</span>
+</button>
+</aside>
+<!-- BOTTOM NAVIGATION BAR (Shared Component Anchor - Active: 'Familia') -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-space-sm py-space-xs bg-surface-container-lowest shadow-[0_-1px_3px_0_rgba(0,0,0,0.08)]">
+<!-- Item 0: Inicio -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container active:scale-95 transition-transform duration-150 rounded-full" href="#inicio">
+<span class="material-symbols-outlined">home</span>
+<span class="text-label-md font-label-md">Inicio</span>
+</a>
+<!-- Item 1: Menú -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container active:scale-95 transition-transform duration-150 rounded-full" href="#menu">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="text-label-md font-label-md">Menú</span>
+</a>
+<!-- Item 2: Comidas -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container active:scale-95 transition-transform duration-150 rounded-full" href="#comidas">
+<span class="material-symbols-outlined">restaurant_menu</span>
+<span class="text-label-md font-label-md">Comidas</span>
+</a>
+<!-- Item 3: Familia (ACTIVE TARGET STATE AS PER SPEC) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 active:scale-95 transition-transform duration-150" href="#familia">
+<span class="material-symbols-outlined fill-icon">group</span>
+<span class="text-label-md font-label-md font-bold">Familia</span>
+</a>
+</nav>
+<!-- Lightweight Micro-Interaction Script for Modal -->
+<script>
+    function toggleModal(show) {
+      const modal = document.getElementById('member-modal');
+      if (show) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      } else {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+    // Initially hide modal
+    document.addEventListener('DOMContentLoaded', () => {
+      toggleModal(false);
+    });
+  </script>
+</body></html>

@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-background" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Menú Semanal - Comiditas Inglis &amp; Chini</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Roboto Flex -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght,opsz,slnt,wdth,GRAD,XOPQ,XTRA,YOPQ,YTAS,YTDE,YTFI,YTLC,YTUC@100..1000,8..144,-10..0,25..151,-200..150,27..175,323..603,43..135,649..854,-305..-98,560..788,416..570,528..760&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary": "#ffffff",
+            "on-secondary-fixed": "#1e192b",
+            "inverse-primary": "#cfbdff",
+            "on-primary-container": "#dfd2ff",
+            "background": "#fef7ff",
+            "on-tertiary-container": "#ffcbda",
+            "secondary": "#625b71",
+            "on-surface-variant": "#494551",
+            "error": "#ba1a1a",
+            "on-secondary-container": "#686177",
+            "outline": "#7a7582",
+            "surface-container-highest": "#e7e0ec",
+            "tertiary-container": "#7d5260",
+            "tertiary-fixed": "#ffd9e3",
+            "surface": "#fef7ff",
+            "surface-tint": "#6650a4",
+            "on-tertiary-fixed-variant": "#633b48",
+            "tertiary-fixed-dim": "#eeb8c8",
+            "on-error": "#ffffff",
+            "on-secondary-fixed-variant": "#4a4358",
+            "primary-fixed-dim": "#cfbdff",
+            "tertiary": "#633b48",
+            "primary": "#4e378a",
+            "inverse-surface": "#322f38",
+            "inverse-on-surface": "#f6eefb",
+            "on-primary": "#ffffff",
+            "on-primary-fixed": "#21005d",
+            "surface-container-lowest": "#ffffff",
+            "primary-container": "#6650a4",
+            "secondary-fixed": "#e8def9",
+            "on-tertiary": "#ffffff",
+            "on-background": "#1d1a23",
+            "surface-container": "#f3ebf8",
+            "surface-bright": "#fef7ff",
+            "on-primary-fixed-variant": "#4e388a",
+            "secondary-fixed-dim": "#ccc2dc",
+            "primary-fixed": "#e8ddff",
+            "surface-container-low": "#f8f1fe",
+            "on-tertiary-fixed": "#31111d",
+            "error-container": "#ffdad6",
+            "surface-variant": "#e7e0ec",
+            "surface-dim": "#dfd7e4",
+            "surface-container-high": "#ede5f2",
+            "secondary-container": "#e8def9",
+            "on-surface": "#1d1a23",
+            "outline-variant": "#cac4d2",
+            "on-error-container": "#93000a"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-desktop": "2rem",
+            "space-sm": "0.5rem",
+            "gutter-desktop": "1.5rem",
+            "space-lg": "1rem",
+            "margin": "1rem",
+            "space-md": "0.75rem",
+            "space-xl": "1.5rem",
+            "space-xs": "0.25rem",
+            "gutter": "1rem"
+          },
+          "fontFamily": {
+            "body-md": ["Roboto Flex"],
+            "headline-md": ["Roboto Flex"],
+            "label-md": ["Roboto Flex"],
+            "display-lg-mobile": ["Roboto Flex"],
+            "title-lg": ["Roboto Flex"],
+            "title-sm": ["Roboto Flex"],
+            "body-sm": ["Roboto Flex"],
+            "display-lg": ["Roboto Flex"],
+            "body-lg": ["Roboto Flex"],
+            "label-sm": ["Roboto Flex"],
+            "label-lg": ["Roboto Flex"],
+            "title-md": ["Roboto Flex"]
+          },
+          "fontSize": {
+            "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+            "headline-md": ["28px", { "lineHeight": "36px", "letterSpacing": "0px", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+            "display-lg-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.25px", "fontWeight": "400" }],
+            "title-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "0px", "fontWeight": "400" }],
+            "title-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.4px", "fontWeight": "400" }],
+            "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+            "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+            "title-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill-icon {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex flex-col pb-28">
+<!-- TOP APP BAR (Shared Components Exact Mapping) -->
+<header class="bg-surface dark:bg-inverse-surface shadow-sm sticky top-0 z-40">
+<div class="flex justify-between items-center w-full px-space-lg py-space-sm max-w-7xl mx-auto">
+<div class="flex items-center gap-space-md">
+<!-- Leading Avatar / Brand icon -->
+<div aria-label="Avatar de la familia Inglis y Chini" class="w-10 h-10 rounded-full bg-secondary-container text-primary flex items-center justify-center font-bold text-title-md border-2 border-surface shadow-sm">
+<span class="material-symbols-outlined fill-icon text-primary" data-icon="soup_kitchen">soup_kitchen</span>
+</div>
+<div>
+<span class="text-title-lg font-title-lg font-bold text-primary dark:text-inverse-primary tracking-tight block">Comiditas Inglis &amp; Chini</span>
+<p class="text-body-sm font-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm text-primary" data-icon="restaurant_menu">restaurant_menu</span>
+            Planificador Semanal
+          </p>
+</div>
+</div>
+<!-- Trailing Action -->
+<div class="flex items-center gap-space-xs">
+<button aria-label="Notificaciones" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container active:scale-95 transition-all duration-150">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</div>
+</header>
+<!-- MAIN VIEWPORT CONTAINER -->
+<main class="max-w-4xl mx-auto w-full px-space-lg mt-space-md flex-1">
+<!-- WEEK SELECTOR & SUBHEADER -->
+<section class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm border border-outline-variant/30 mb-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="p-2 rounded-lg bg-surface-container text-primary">
+<span class="material-symbols-outlined fill-icon" data-icon="calendar_month">calendar_month</span>
+</div>
+<div>
+<span class="text-label-sm font-label-sm text-secondary uppercase font-semibold tracking-wider">Plan Activo</span>
+<h1 class="text-title-md font-title-md font-bold text-on-surface">Semana 24 - 28 Octubre</h1>
+</div>
+</div>
+<!-- Selector controls -->
+<div class="flex items-center gap-space-xs self-end sm:self-auto bg-surface-container-low p-1 rounded-full">
+<button aria-label="Semana anterior" class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container active:scale-95 transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_left">chevron_left</span>
+</button>
+<span class="text-label-md font-label-md px-space-sm text-on-surface font-medium">Esta semana</span>
+<button aria-label="Semana siguiente" class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container active:scale-95 transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</section>
+<!-- HERO GENERATOR TRIGGER (Royal Iris CTA) -->
+<section class="relative overflow-hidden bg-gradient-to-r from-primary to-primary-container text-on-primary rounded-xl p-space-lg shadow-md mb-space-lg">
+<div class="absolute -right-6 -bottom-8 opacity-15 pointer-events-none text-on-primary">
+<span class="material-symbols-outlined text-9xl" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="space-y-space-xs">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm text-white text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-sm fill-icon" data-icon="verified">verified</span>
+            Generado automáticamente según preferencias
+          </div>
+<h2 class="text-title-lg font-title-lg font-bold text-white tracking-tight">Menú Inteligente de Familia</h2>
+<p class="text-body-md font-body-md text-on-primary-container max-w-md">
+            Balancea gustos de Inglis, Chini y peques, minimizando tiempos de cocinado y respetando recetas favoritas.
+          </p>
+</div>
+<button class="self-start md:self-center inline-flex items-center justify-center gap-space-sm px-6 py-3 rounded-full bg-white text-primary hover:bg-surface-bright active:scale-95 transition-transform duration-150 shadow-md font-label-lg text-label-lg font-bold whitespace-nowrap cursor-pointer" id="btn-generate-menu">
+<span class="material-symbols-outlined fill-icon text-primary text-xl" data-icon="auto_awesome">auto_awesome</span>
+          Generar Menú Semanal
+        </button>
+</div>
+</section>
+<!-- FAMILY ROSTER MINI BADGES (Taxonomy Guide) -->
+<div class="flex items-center justify-between flex-wrap gap-space-sm mb-space-md px-1">
+<span class="text-label-md font-label-md text-on-surface-variant">Preferencias activas para:</span>
+<div class="flex items-center gap-space-md flex-wrap">
+<div class="flex items-center gap-1.5 bg-surface-container-lowest px-2.5 py-1 rounded-full shadow-sm border border-outline-variant/20">
+<span class="w-3 h-3 rounded-full bg-primary-container inline-block"></span>
+<span class="text-label-sm font-label-sm text-on-surface font-medium">Inglis (Papá)</span>
+</div>
+<div class="flex items-center gap-1.5 bg-surface-container-lowest px-2.5 py-1 rounded-full shadow-sm border border-outline-variant/20">
+<span class="w-3 h-3 rounded-full bg-tertiary-container inline-block"></span>
+<span class="text-label-sm font-label-sm text-on-surface font-medium">Chini (Mamá)</span>
+</div>
+<div class="flex items-center gap-1.5 bg-surface-container-lowest px-2.5 py-1 rounded-full shadow-sm border border-outline-variant/20">
+<span class="w-3 h-3 rounded-full bg-secondary inline-block"></span>
+<span class="text-label-sm font-label-sm text-on-surface font-medium">Hijos</span>
+</div>
+</div>
+</div>
+<!-- WEEKLY DAYS LIST (LUNES A VIERNES) -->
+<div class="space-y-space-md">
+<!-- ================= LUNES ================= -->
+<article class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/25 transition-all hover:shadow-md">
+<!-- Day Header -->
+<div class="flex items-center justify-between pb-space-sm border-b border-surface-container-high mb-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="w-9 h-9 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center text-label-lg font-bold">L</span>
+<div>
+<h3 class="text-title-md font-title-md font-bold text-on-surface">Lunes</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">24 de Octubre</p>
+</div>
+</div>
+<span class="text-label-sm font-label-sm px-2.5 py-0.5 rounded-full bg-surface-container-high text-secondary font-medium">Completado 1/2</span>
+</div>
+<!-- Meals Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Almuerzo -->
+<div class="p-space-md rounded-xl bg-surface-container-low border border-outline-variant/20 flex flex-col justify-between space-y-space-sm">
+<div>
+<div class="flex items-center justify-between mb-1">
+<span class="text-label-sm font-label-sm text-primary font-semibold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="wb_sunny">wb_sunny</span>
+                  Almuerzo
+                </span>
+<span class="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+                  40 min
+                </span>
+</div>
+<h4 class="text-title-sm font-title-sm font-bold text-on-surface">Lentejas caseras con verduras</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Con chorizo suave y toque de pimentón de la Vera.</p>
+<!-- Preferencias Micro-Avatars -->
+<div class="mt-space-sm flex items-center gap-1.5">
+<span class="text-label-sm font-label-sm text-outline">Gusta a:</span>
+<div class="flex -space-x-1">
+<span class="w-5 h-5 rounded-full bg-primary-container text-white text-[10px] flex items-center justify-center font-bold" title="Inglis">I</span>
+<span class="w-5 h-5 rounded-full bg-tertiary-container text-white text-[10px] flex items-center justify-center font-bold" title="Chini">C</span>
+<span class="w-5 h-5 rounded-full bg-secondary text-white text-[10px] flex items-center justify-center font-bold" title="Hijos">H</span>
+</div>
+</div>
+</div>
+<!-- Actions Row -->
+<div class="pt-space-xs flex items-center justify-between border-t border-outline-variant/15 text-body-sm">
+<button class="inline-flex items-center gap-1 text-primary hover:text-primary-container text-label-md font-label-md transition-colors" title="Marcar como cocinado">
+<span class="material-symbols-outlined text-base fill-icon text-primary" data-icon="check_circle">check_circle</span>
+                Cocinada
+              </button>
+<div class="flex items-center gap-space-xs">
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary active:scale-95 transition-all" title="Regenerar plato">
+<span class="material-symbols-outlined text-lg" data-icon="refresh">refresh</span>
+</button>
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary active:scale-95 transition-all" title="Intercambiar plato">
+<span class="material-symbols-outlined text-lg" data-icon="swap_vert">swap_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Cena -->
+<div class="p-space-md rounded-xl bg-surface-container-low border border-outline-variant/20 flex flex-col justify-between space-y-space-sm">
+<div>
+<div class="flex items-center justify-between mb-1">
+<span class="text-label-sm font-label-sm text-secondary font-semibold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="bedtime">bedtime</span>
+                  Cena
+                </span>
+<span class="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+                  25 min
+                </span>
+</div>
+<h4 class="text-title-sm font-title-sm font-bold text-on-surface">Tortilla de patatas con ensalada mixta</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Tortilla poco cuajada y ensalada con tomate y atún.</p>
+<!-- Preferencias Micro-Avatars -->
+<div class="mt-space-sm flex items-center gap-1.5">
+<span class="text-label-sm font-label-sm text-outline">Gusta a:</span>
+<div class="flex -space-x-1">
+<span class="w-5 h-5 rounded-full bg-primary-container text-white text-[10px] flex items-center justify-center font-bold" title="Inglis">I</span>
+<span class="w-5 h-5 rounded-full bg-tertiary-container text-white text-[10px] flex items-center justify-center font-bold" title="Chini">C</span>
+</div>
+</div>
+</div>
+<!-- Actions Row -->
+<div class="pt-space-xs flex items-center justify-between border-t border-outline-variant/15 text-body-sm">
+<button class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary text-label-md font-label-md transition-colors" title="Marcar como cocinado">
+<span class="material-symbols-outlined text-base" data-icon="check_circle">check_circle</span>
+                Cocinar
+              </button>
+<div class="flex items-center gap-space-xs">
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary active:scale-95 transition-all" title="Regenerar plato">
+<span class="material-symbols-outlined text-lg" data-icon="refresh">refresh</span>
+</button>
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary active:scale-95 transition-all" title="Intercambiar plato">
+<span class="material-symbols-outlined text-lg" data-icon="swap_vert">swap_vert</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</article>
+<!-- ================= MARTES ================= -->
+<article class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/25 transition-all hover:shadow-md">
+<div class="flex items-center justify-between pb-space-sm border-b border-surface-container-high mb-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="w-9 h-9 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center text-label-lg font-bold">M</span>
+<div>
+<h3 class="text-title-md font-title-md font-bold text-on-surface">Martes</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">25 de Octubre</p>
+</div>
+</div>
+<span class="text-label-sm font-label-sm px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant">Pendiente</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Almuerzo -->
+<div class="p-space-md rounded-xl bg-surface-container-low border border-outline-variant/20 flex flex-col justify-between space-y-space-sm">
+<div>
+<div class="flex items-center justify-between mb-1">
+<span class="text-label-sm font-label-sm text-primary font-semibold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="wb_sunny">wb_sunny</span>
+                  Almuerzo
+                </span>
+<span class="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+                  30 min
+                </span>
+</div>
+<h4 class="text-title-sm font-title-sm font-bold text-on-surface">Pasta boloñesa tradicional</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Carne magra, sofrito casero y queso parmesano rallado.</p>
+<div class="mt-space-sm flex items-center gap-1.5">
+<span class="text-label-sm font-label-sm text-outline">Gusta a:</span>
+<div class="flex -space-x-1">
+<span class="w-5 h-5 rounded-full bg-primary-container text-white text-[10px] flex items-center justify-center font-bold" title="Inglis">I</span>
+<span class="w-5 h-5 rounded-full bg-tertiary-container text-white text-[10px] flex items-center justify-center font-bold" title="Chini">C</span>
+<span class="w-5 h-5 rounded-full bg-secondary text-white text-[10px] flex items-center justify-center font-bold" title="Hijos">H</span>
+</div>
+</div>
+</div>
+<div class="pt-space-xs flex items-center justify-between border-t border-outline-variant/15 text-body-sm">
+<button class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary text-label-md font-label-md transition-colors">
+<span class="material-symbols-outlined text-base" data-icon="check_circle">check_circle</span>
+                Cocinar
+              </button>
+<div class="flex items-center gap-space-xs">
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="refresh">refresh</span>
+</button>
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="swap_vert">swap_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Cena -->
+<div class="p-space-md rounded-xl bg-surface-container-low border border-outline-variant/20 flex flex-col justify-between space-y-space-sm">
+<div>
+<div class="flex items-center justify-between mb-1">
+<span class="text-label-sm font-label-sm text-secondary font-semibold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="bedtime">bedtime</span>
+                  Cena
+                </span>
+<span class="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+                  20 min
+                </span>
+</div>
+<h4 class="text-title-sm font-title-sm font-bold text-on-surface">Crema de calabacín y merluza plancha</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Cena ligera y suave con picatostes integrales.</p>
+<div class="mt-space-sm flex items-center gap-1.5">
+<span class="text-label-sm font-label-sm text-outline">Gusta a:</span>
+<div class="flex -space-x-1">
+<span class="w-5 h-5 rounded-full bg-tertiary-container text-white text-[10px] flex items-center justify-center font-bold" title="Chini">C</span>
+<span class="w-5 h-5 rounded-full bg-secondary text-white text-[10px] flex items-center justify-center font-bold" title="Hijos">H</span>
+</div>
+</div>
+</div>
+<div class="pt-space-xs flex items-center justify-between border-t border-outline-variant/15 text-body-sm">
+<button class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary text-label-md font-label-md transition-colors">
+<span class="material-symbols-outlined text-base" data-icon="check_circle">check_circle</span>
+                Cocinar
+              </button>
+<div class="flex items-center gap-space-xs">
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="refresh">refresh</span>
+</button>
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="swap_vert">swap_vert</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</article>
+<!-- ================= MIÉRCOLES ================= -->
+<article class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/25 transition-all hover:shadow-md">
+<div class="flex items-center justify-between pb-space-sm border-b border-surface-container-high mb-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="w-9 h-9 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center text-label-lg font-bold">X</span>
+<div>
+<h3 class="text-title-md font-title-md font-bold text-on-surface">Miércoles</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">26 de Octubre</p>
+</div>
+</div>
+<span class="text-label-sm font-label-sm px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant">Pendiente</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Almuerzo -->
+<div class="p-space-md rounded-xl bg-surface-container-low border border-outline-variant/20 flex flex-col justify-between space-y-space-sm">
+<div>
+<div class="flex items-center justify-between mb-1">
+<span class="text-label-sm font-label-sm text-primary font-semibold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="wb_sunny">wb_sunny</span>
+                  Almuerzo
+                </span>
+<span class="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+                  35 min
+                </span>
+</div>
+<h4 class="text-title-sm font-title-sm font-bold text-on-surface">Salmón al horno con verduras</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Con calabacín, espárragos trigueros y patata panadera.</p>
+<div class="mt-space-sm flex items-center gap-1.5">
+<span class="text-label-sm font-label-sm text-outline">Gusta a:</span>
+<div class="flex -space-x-1">
+<span class="w-5 h-5 rounded-full bg-primary-container text-white text-[10px] flex items-center justify-center font-bold" title="Inglis">I</span>
+<span class="w-5 h-5 rounded-full bg-tertiary-container text-white text-[10px] flex items-center justify-center font-bold" title="Chini">C</span>
+</div>
+</div>
+</div>
+<div class="pt-space-xs flex items-center justify-between border-t border-outline-variant/15 text-body-sm">
+<button class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary text-label-md font-label-md transition-colors">
+<span class="material-symbols-outlined text-base" data-icon="check_circle">check_circle</span>
+                Cocinar
+              </button>
+<div class="flex items-center gap-space-xs">
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="refresh">refresh</span>
+</button>
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="swap_vert">swap_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Cena -->
+<div class="p-space-md rounded-xl bg-surface-container-low border border-outline-variant/20 flex flex-col justify-between space-y-space-sm">
+<div>
+<div class="flex items-center justify-between mb-1">
+<span class="text-label-sm font-label-sm text-secondary font-semibold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="bedtime">bedtime</span>
+                  Cena
+                </span>
+<span class="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+                  15 min
+                </span>
+</div>
+<h4 class="text-title-sm font-title-sm font-bold text-on-surface">Sándwich mixto gourmet</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Pan de masa madre, jamón braseado y queso emmental fundido.</p>
+<div class="mt-space-sm flex items-center gap-1.5">
+<span class="text-label-sm font-label-sm text-outline">Gusta a:</span>
+<div class="flex -space-x-1">
+<span class="w-5 h-5 rounded-full bg-primary-container text-white text-[10px] flex items-center justify-center font-bold" title="Inglis">I</span>
+<span class="w-5 h-5 rounded-full bg-secondary text-white text-[10px] flex items-center justify-center font-bold" title="Hijos">H</span>
+</div>
+</div>
+</div>
+<div class="pt-space-xs flex items-center justify-between border-t border-outline-variant/15 text-body-sm">
+<button class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary text-label-md font-label-md transition-colors">
+<span class="material-symbols-outlined text-base" data-icon="check_circle">check_circle</span>
+                Cocinar
+              </button>
+<div class="flex items-center gap-space-xs">
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="refresh">refresh</span>
+</button>
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="swap_vert">swap_vert</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</article>
+<!-- ================= JUEVES ================= -->
+<article class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border border-outline-variant/25 transition-all hover:shadow-md">
+<div class="flex items-center justify-between pb-space-sm border-b border-surface-container-high mb-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="w-9 h-9 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center text-label-lg font-bold">J</span>
+<div>
+<h3 class="text-title-md font-title-md font-bold text-on-surface">Jueves</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">27 de Octubre</p>
+</div>
+</div>
+<span class="text-label-sm font-label-sm px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant">Pendiente</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Almuerzo -->
+<div class="p-space-md rounded-xl bg-surface-container-low border border-outline-variant/20 flex flex-col justify-between space-y-space-sm">
+<div>
+<div class="flex items-center justify-between mb-1">
+<span class="text-label-sm font-label-sm text-primary font-semibold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="wb_sunny">wb_sunny</span>
+                  Almuerzo
+                </span>
+<span class="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+                  35 min
+                </span>
+</div>
+<h4 class="text-title-sm font-title-sm font-bold text-on-surface">Arroz con pollo campero</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Guisado sabroso con pimiento verde, azafrán y guisantes.</p>
+<div class="mt-space-sm flex items-center gap-1.5">
+<span class="text-label-sm font-label-sm text-outline">Gusta a:</span>
+<div class="flex -space-x-1">
+<span class="w-5 h-5 rounded-full bg-primary-container text-white text-[10px] flex items-center justify-center font-bold" title="Inglis">I</span>
+<span class="w-5 h-5 rounded-full bg-tertiary-container text-white text-[10px] flex items-center justify-center font-bold" title="Chini">C</span>
+<span class="w-5 h-5 rounded-full bg-secondary text-white text-[10px] flex items-center justify-center font-bold" title="Hijos">H</span>
+</div>
+</div>
+</div>
+<div class="pt-space-xs flex items-center justify-between border-t border-outline-variant/15 text-body-sm">
+<button class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary text-label-md font-label-md transition-colors">
+<span class="material-symbols-outlined text-base" data-icon="check_circle">check_circle</span>
+                Cocinar
+              </button>
+<div class="flex items-center gap-space-xs">
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="refresh">refresh</span>
+</button>
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="swap_vert">swap_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Cena -->
+<div class="p-space-md rounded-xl bg-surface-container-low border border-outline-variant/20 flex flex-col justify-between space-y-space-sm">
+<div>
+<div class="flex items-center justify-between mb-1">
+<span class="text-label-sm font-label-sm text-secondary font-semibold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="bedtime">bedtime</span>
+                  Cena
+                </span>
+<span class="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+                  20 min
+                </span>
+</div>
+<h4 class="text-title-sm font-title-sm font-bold text-on-surface">Fajitas de verduras salteadas</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Con cebolla caramelizada, champiñones y guacamole casero.</p>
+<div class="mt-space-sm flex items-center gap-1.5">
+<span class="text-label-sm font-label-sm text-outline">Gusta a:</span>
+<div class="flex -space-x-1">
+<span class="w-5 h-5 rounded-full bg-tertiary-container text-white text-[10px] flex items-center justify-center font-bold" title="Chini">C</span>
+<span class="w-5 h-5 rounded-full bg-secondary text-white text-[10px] flex items-center justify-center font-bold" title="Hijos">H</span>
+</div>
+</div>
+</div>
+<div class="pt-space-xs flex items-center justify-between border-t border-outline-variant/15 text-body-sm">
+<button class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary text-label-md font-label-md transition-colors">
+<span class="material-symbols-outlined text-base" data-icon="check_circle">check_circle</span>
+                Cocinar
+              </button>
+<div class="flex items-center gap-space-xs">
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="refresh">refresh</span>
+</button>
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="swap_vert">swap_vert</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</article>
+<!-- ================= VIERNES ================= -->
+<article class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm border-2 border-primary/20 transition-all hover:shadow-md">
+<div class="flex items-center justify-between pb-space-sm border-b border-surface-container-high mb-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="w-9 h-9 rounded-full bg-primary text-on-primary flex items-center justify-center text-label-lg font-bold shadow-sm">V</span>
+<div>
+<h3 class="text-title-md font-title-md font-bold text-on-surface">Viernes</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant">28 de Octubre</p>
+</div>
+</div>
+<span class="text-label-sm font-label-sm px-2.5 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-semibold">¡Fin de semana!</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Almuerzo -->
+<div class="p-space-md rounded-xl bg-surface-container-low border border-outline-variant/20 flex flex-col justify-between space-y-space-sm">
+<div>
+<div class="flex items-center justify-between mb-1">
+<span class="text-label-sm font-label-sm text-primary font-semibold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="wb_sunny">wb_sunny</span>
+                  Almuerzo
+                </span>
+<span class="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+                  45 min
+                </span>
+</div>
+<h4 class="text-title-sm font-title-sm font-bold text-on-surface">Potaje de garbanzos con espinacas</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Plato de cuchara reconfortante con huevo cocido.</p>
+<div class="mt-space-sm flex items-center gap-1.5">
+<span class="text-label-sm font-label-sm text-outline">Gusta a:</span>
+<div class="flex -space-x-1">
+<span class="w-5 h-5 rounded-full bg-primary-container text-white text-[10px] flex items-center justify-center font-bold" title="Inglis">I</span>
+<span class="w-5 h-5 rounded-full bg-tertiary-container text-white text-[10px] flex items-center justify-center font-bold" title="Chini">C</span>
+</div>
+</div>
+</div>
+<div class="pt-space-xs flex items-center justify-between border-t border-outline-variant/15 text-body-sm">
+<button class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary text-label-md font-label-md transition-colors">
+<span class="material-symbols-outlined text-base" data-icon="check_circle">check_circle</span>
+                Cocinar
+              </button>
+<div class="flex items-center gap-space-xs">
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="refresh">refresh</span>
+</button>
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="swap_vert">swap_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Cena destacada: Pizza Familiar -->
+<div class="p-space-md rounded-xl bg-gradient-to-br from-surface-container-low to-secondary-container/40 border-2 border-secondary/30 flex flex-col justify-between space-y-space-sm relative overflow-hidden">
+<div class="absolute -right-3 -bottom-3 text-secondary/10 pointer-events-none">
+<span class="material-symbols-outlined text-8xl" data-icon="local_pizza">local_pizza</span>
+</div>
+<div class="relative z-10">
+<div class="flex items-center justify-between mb-1">
+<span class="text-label-sm font-label-sm text-tertiary font-bold uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-sm fill-icon" data-icon="celebration">celebration</span>
+                  ¡Viernes de Pizza!
+                </span>
+<span class="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-1 font-medium">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+                  20 min
+                </span>
+</div>
+<h4 class="text-title-sm font-title-sm font-bold text-on-surface">Pizza casera familiar con bordes crujientes</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">Mitad mozzarella/jamón york y mitad verduras asadas con rúcula.</p>
+<div class="mt-space-sm flex items-center gap-1.5">
+<span class="text-label-sm font-label-sm text-outline">Gusta a:</span>
+<div class="flex -space-x-1">
+<span class="w-5 h-5 rounded-full bg-primary-container text-white text-[10px] flex items-center justify-center font-bold" title="Inglis">I</span>
+<span class="w-5 h-5 rounded-full bg-tertiary-container text-white text-[10px] flex items-center justify-center font-bold" title="Chini">C</span>
+<span class="w-5 h-5 rounded-full bg-secondary text-white text-[10px] flex items-center justify-center font-bold" title="Hijos">H</span>
+</div>
+<span class="text-label-sm font-label-sm text-primary font-bold ml-1">¡Unanimidad! 🍕</span>
+</div>
+</div>
+<div class="relative z-10 pt-space-xs flex items-center justify-between border-t border-outline-variant/20 text-body-sm">
+<button class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary text-label-md font-label-md transition-colors">
+<span class="material-symbols-outlined text-base" data-icon="check_circle">check_circle</span>
+                Cocinar
+              </button>
+<div class="flex items-center gap-space-xs">
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="refresh">refresh</span>
+</button>
+<button class="p-1.5 rounded-full text-on-surface-variant hover:bg-surface-container hover:text-primary active:scale-95 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="swap_vert">swap_vert</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</article>
+</div>
+</main>
+<!-- MODAL / TOAST DE REGENERACIÓN (Feedback interactivo) -->
+<div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200" id="modal-feedback">
+<div class="bg-surface-container-lowest rounded-2xl max-w-sm w-full p-space-lg shadow-xl border border-outline-variant/30 text-center transform scale-95 transition-transform duration-200" id="modal-box">
+<div class="w-14 h-14 mx-auto rounded-full bg-secondary-container text-primary flex items-center justify-center mb-space-sm shadow-sm">
+<span class="material-symbols-outlined text-3xl fill-icon" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<h3 class="text-title-lg font-title-lg font-bold text-on-surface">¡Menú Generado!</h3>
+<p class="text-body-md font-body-md text-on-surface-variant mt-1 mb-space-md">
+        Se han distribuido 10 platos optimizados para los gustos de Inglis, Chini y peques.
+      </p>
+<button class="w-full py-2.5 rounded-full bg-primary text-white font-label-lg text-label-lg font-bold hover:bg-primary-container active:scale-95 transition-all" id="btn-close-modal">
+        Entendido, ¡a cocinar!
+      </button>
+</div>
+</div>
+<!-- BOTTOM NAVBAR (Shared Component Mandate: Exact labels, icons, and active styling) -->
+<!-- Contextual Active: 'Menú' is active because this is the Weekly Menu Screen -->
+<nav aria-label="Navegación principal" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-space-sm py-space-xs shadow-[0_-1px_3px_0_rgba(0,0,0,0.08)] bg-surface-container-lowest dark:bg-inverse-surface">
+<!-- Tab 0: Inicio (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="text-label-md font-label-md">Inicio</span>
+</a>
+<!-- Tab 1: Menú (ACTIVE: style_active_navigation verbatim applied) -->
+<a aria-current="page" class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-full px-4 py-1 hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined fill-icon" data-icon="calendar_month">calendar_month</span>
+<span class="text-label-md font-label-md font-bold">Menú</span>
+</a>
+<!-- Tab 2: Comidas (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="restaurant_menu">restaurant_menu</span>
+<span class="text-label-md font-label-md">Comidas</span>
+</a>
+<!-- Tab 3: Familia (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="text-label-md font-label-md">Familia</span>
+</a>
+</nav>
+<!-- Inline vanilla script for generator modal feedback & button interactions -->
+<script>
+    const generateBtn = document.getElementById('btn-generate-menu');
+    const modal = document.getElementById('modal-feedback');
+    const modalBox = document.getElementById('modal-box');
+    const closeModalBtn = document.getElementById('btn-close-modal');
+
+    function openModal() {
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modalBox.classList.remove('scale-95');
+      modalBox.classList.add('scale-100');
+    }
+
+    function closeModal() {
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modalBox.classList.remove('scale-100');
+      modalBox.classList.add('scale-95');
+    }
+
+    if (generateBtn) {
+      generateBtn.addEventListener('click', openModal);
+    }
+
+    if (closeModalBtn) {
+      closeModalBtn.addEventListener('click', closeModal);
+    }
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+  </script>
+</body></html>

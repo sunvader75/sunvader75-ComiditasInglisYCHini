@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-background" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Comiditas Inglis &amp; Chini - Gestión de Comidas</title>
+<!-- Google Fonts: Roboto Flex -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght,opsz@300..700,8..144&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary": "#ffffff",
+            "on-secondary-fixed": "#1e192b",
+            "inverse-primary": "#cfbdff",
+            "on-primary-container": "#dfd2ff",
+            "background": "#fef7ff",
+            "on-tertiary-container": "#ffcbda",
+            "secondary": "#625b71",
+            "on-surface-variant": "#494551",
+            "error": "#ba1a1a",
+            "on-secondary-container": "#686177",
+            "outline": "#7a7582",
+            "surface-container-highest": "#e7e0ec",
+            "tertiary-container": "#7d5260",
+            "tertiary-fixed": "#ffd9e3",
+            "surface": "#fef7ff",
+            "surface-tint": "#6650a4",
+            "on-tertiary-fixed-variant": "#633b48",
+            "tertiary-fixed-dim": "#eeb8c8",
+            "on-error": "#ffffff",
+            "on-secondary-fixed-variant": "#4a4358",
+            "primary-fixed-dim": "#cfbdff",
+            "tertiary": "#633b48",
+            "primary": "#4e378a",
+            "inverse-surface": "#322f38",
+            "inverse-on-surface": "#f6eefb",
+            "on-primary": "#ffffff",
+            "on-primary-fixed": "#21005d",
+            "surface-container-lowest": "#ffffff",
+            "primary-container": "#6650a4",
+            "secondary-fixed": "#e8def9",
+            "on-tertiary": "#ffffff",
+            "on-background": "#1d1a23",
+            "surface-container": "#f3ebf8",
+            "surface-bright": "#fef7ff",
+            "on-primary-fixed-variant": "#4e388a",
+            "secondary-fixed-dim": "#ccc2dc",
+            "primary-fixed": "#e8ddff",
+            "surface-container-low": "#f8f1fe",
+            "on-tertiary-fixed": "#31111d",
+            "error-container": "#ffdad6",
+            "surface-variant": "#e7e0ec",
+            "surface-dim": "#dfd7e4",
+            "surface-container-high": "#ede5f2",
+            "secondary-container": "#e8def9",
+            "on-surface": "#1d1a23",
+            "outline-variant": "#cac4d2",
+            "on-error-container": "#93000a"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-desktop": "2rem",
+            "space-sm": "0.5rem",
+            "gutter-desktop": "1.5rem",
+            "space-lg": "1rem",
+            "margin": "1rem",
+            "space-md": "0.75rem",
+            "space-xl": "1.5rem",
+            "space-xs": "0.25rem",
+            "gutter": "1rem"
+          },
+          "fontFamily": {
+            "body-md": ["Roboto Flex"],
+            "headline-md": ["Roboto Flex"],
+            "label-md": ["Roboto Flex"],
+            "display-lg-mobile": ["Roboto Flex"],
+            "title-lg": ["Roboto Flex"],
+            "title-sm": ["Roboto Flex"],
+            "body-sm": ["Roboto Flex"],
+            "display-lg": ["Roboto Flex"],
+            "body-lg": ["Roboto Flex"],
+            "label-sm": ["Roboto Flex"],
+            "label-lg": ["Roboto Flex"],
+            "title-md": ["Roboto Flex"]
+          },
+          "fontSize": {
+            "body-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400"}],
+            "headline-md": ["28px", {"lineHeight": "36px", "letterSpacing": "0px", "fontWeight": "400"}],
+            "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+            "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.25px", "fontWeight": "400"}],
+            "title-lg": ["22px", {"lineHeight": "28px", "letterSpacing": "0px", "fontWeight": "400"}],
+            "title-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500"}],
+            "body-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.4px", "fontWeight": "400"}],
+            "display-lg": ["57px", {"lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "400"}],
+            "body-lg": ["16px", {"lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400"}],
+            "label-sm": ["11px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+            "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500"}],
+            "title-md": ["16px", {"lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500"}]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-background text-on-surface flex flex-col min-h-screen pb-28">
+<!-- TOP APP BAR (Shared Components Tokenized Implementation) -->
+<header class="bg-surface dark:bg-inverse-surface shadow-sm sticky top-0 z-40">
+<div class="flex justify-between items-center w-full px-space-lg py-space-sm max-w-7xl mx-auto">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-title-md text-title-md font-bold shadow-sm" title="Avatar de la familia Inglis y Chini">
+<span class="material-symbols-outlined text-[20px]" data-icon="soup_kitchen">soup_kitchen</span>
+</div>
+<div class="flex flex-col">
+<span class="text-title-lg font-title-lg font-bold text-primary dark:text-inverse-primary leading-tight">Comiditas Inglis &amp; Chini</span>
+<span class="text-label-md font-label-md text-on-surface-variant dark:text-outline-variant">Catálogo y Gestión de Comidas</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button aria-label="Notificaciones" class="w-10 h-10 rounded-full flex items-center justify-center text-primary dark:text-inverse-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-150 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[24px]" data-icon="notifications">notifications</span>
+</button>
+</div>
+</div>
+</header>
+<!-- MAIN VIEW CONTAINER -->
+<main class="max-w-7xl mx-auto w-full px-space-lg py-space-md flex-1">
+<!-- HEADER CONTROLS & SEARCH/FILTER SECTION -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md mb-space-lg">
+<div>
+<h1 class="text-headline-md font-headline-md text-on-background font-bold tracking-tight">Mis Comidas</h1>
+<p class="text-body-md font-body-md text-on-surface-variant">4 platos registrados para el menú semanal</p>
+</div>
+<!-- Primary Action CTA Button -->
+<button class="inline-flex items-center justify-center gap-space-xs bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg rounded-full px-6 py-3 min-h-[48px] shadow-sm hover:shadow-md transition-all active:scale-95 duration-150 self-start md:self-auto" onclick="openModal()">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+<span>Añadir Comida</span>
+</button>
+</div>
+<!-- FILTER BAR & SEARCH BAR -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm mb-space-lg flex flex-col md:flex-row gap-space-md items-stretch md:items-center justify-between">
+<!-- Search Input -->
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2.5 bg-surface-container-low rounded-lg text-body-md font-body-md border-0 focus:ring-2 focus:ring-primary text-on-surface placeholder-on-surface-variant/70" placeholder="Buscar por plato, ingrediente o preferencia..." type="text"/>
+</div>
+<!-- Quick Filter Chips -->
+<div class="flex items-center gap-space-xs overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+<span class="text-label-sm font-label-sm text-outline uppercase tracking-wider pl-1 hidden sm:inline">Filtrar:</span>
+<button class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-secondary-container text-on-secondary-fixed text-label-md font-label-md font-medium active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[16px]" data-icon="check" style="font-variation-settings: 'FILL' 1;">check</span>
+          Todos
+        </button>
+<button class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant text-label-md font-label-md active:scale-95 transition-all border border-outline-variant/60">
+<span class="material-symbols-outlined text-[16px]" data-icon="wb_sunny">wb_sunny</span>
+          Almuerzo
+        </button>
+<button class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant text-label-md font-label-md active:scale-95 transition-all border border-outline-variant/60">
+<span class="material-symbols-outlined text-[16px]" data-icon="bedtime">bedtime</span>
+          Cena
+        </button>
+<button class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant text-label-md font-label-md active:scale-95 transition-all border border-outline-variant/60">
+<span class="material-symbols-outlined text-[16px]" data-icon="bolt">bolt</span>
+          Rápido (&lt;25m)
+        </button>
+</div>
+</div>
+<!-- MEALS LIST: Bento / Responsive Card Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg" id="mealsList">
+<!-- CARD 1: Lentejas con chorizo -->
+<article class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-md transition-shadow duration-200 border border-surface-container-high flex flex-col justify-between">
+<div>
+<!-- Card Header / Media & Metadata -->
+<div class="flex items-start gap-space-md mb-space-md">
+<div class="w-20 h-20 rounded-xl overflow-hidden shrink-0 relative bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A warm and hearty Spanish bowl of lentil stew with authentic chorizo and potatoes, garnished with fresh bay leaves, captured under soft warm kitchen sunlight with clean modern ceramic tableware and a cozy domestic aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnlo2lIE-3r9D2YmdSLiLI1xsaA9P0AXXjl46SIw6YAPUjZ32je83BdRMxCvL7jht4lgcHfyF7RHcJLq8qa2boj-qbHRsfeK3OAG79070pN2YFI5KVuQ4XEfXB4iQ2dH2rx80YocnVpJKX_u06xa-q8K_pyvbvNCdzYi-7DM2c_hKAo6fPd2CrbmWL7wabRxPLykLn7l3ZYmwh-jhSwgDpYBUPQ1zx21bBGmvvRzICEQN0SxBrmQn3"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-space-xs">
+<span class="inline-flex items-center gap-1 text-label-sm font-label-sm text-primary font-bold bg-primary-fixed px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px]" data-icon="timer">timer</span> 45 min
+                </span>
+<!-- Action Controls -->
+<div class="flex items-center gap-1">
+<button aria-label="Editar Lentejas con chorizo" class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors" onclick="openModal('Lentejas con chorizo', 'Almuerzo')" title="Editar plato">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+<button aria-label="Eliminar Lentejas con chorizo" class="w-8 h-8 rounded-full flex items-center justify-center text-outline hover:text-error hover:bg-error-container/40 transition-colors" onclick="confirmDelete('Lentejas con chorizo')" title="Eliminar plato">
+<span class="material-symbols-outlined text-[18px]" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<h2 class="text-title-md font-title-md font-bold text-on-surface mt-1 truncate">Lentejas con chorizo</h2>
+<div class="flex flex-wrap gap-1 mt-1.5">
+<span class="text-label-sm font-label-sm bg-surface-container text-on-surface-variant px-2 py-0.5 rounded">Almuerzo</span>
+<span class="text-label-sm font-label-sm bg-surface-container text-on-surface-variant px-2 py-0.5 rounded">Legumbres</span>
+<span class="text-label-sm font-label-sm bg-surface-container text-on-surface-variant px-2 py-0.5 rounded">Casero</span>
+</div>
+</div>
+</div>
+<!-- SECTION: Le gusta a -->
+<div class="bg-surface-container-low rounded-lg p-space-sm mt-space-sm border border-surface-container">
+<div class="flex items-center gap-2 mb-1.5">
+<span class="material-symbols-outlined text-primary text-[18px]" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="text-label-md font-label-md font-bold text-primary">Le gusta a:</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant ml-auto">A Chini, Mamá y Lucas les encanta</span>
+</div>
+<div class="flex items-center gap-2 pt-1 border-t border-outline-variant/40">
+<div class="flex -space-x-1.5 overflow-hidden">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#f28b82] text-white text-label-sm font-bold ring-2 ring-white" title="Chini">C</span>
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#81c995] text-white text-label-sm font-bold ring-2 ring-white" title="Mamá">M</span>
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#78a9ff] text-white text-label-sm font-bold ring-2 ring-white" title="Lucas">L</span>
+</div>
+<div class="flex flex-wrap gap-1.5 text-body-sm font-body-sm text-on-surface-variant">
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#f28b82]"></span> Chini</span>
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#81c995]"></span> Mamá</span>
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#78a9ff]"></span> Lucas</span>
+</div>
+</div>
+</div>
+</div>
+</article>
+<!-- CARD 2: Pizza casera -->
+<article class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-md transition-shadow duration-200 border border-surface-container-high flex flex-col justify-between">
+<div>
+<div class="flex items-start gap-space-md mb-space-md">
+<div class="w-20 h-20 rounded-xl overflow-hidden shrink-0 relative bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Artisanal homemade sourdough pizza topped with melting fresh mozzarella, fragrant basil leaves, and slow-cooked tomato sauce on a rustic stone board in an immaculate white domestic kitchen setting bathed in airy natural light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCG2n8s69LD39A2sF9pDXezmnwRPSBOCPl4KY4AChrGCSl_kxutUxwGcTt_2YC6VYWzUXiC0lUeWFNvQPz9R69LRrTd-hHLJQs8Lb4qNk_tM4D65_xge9Jd-lp2xIt8_gFglvYly3HK7bMbAig6t_5oCQEUQa8Xp1ZYbHOJz7O9R_6mulGvwh1Y3ej6s5U4QWYTsHYBcoho63tqGmbalZXnXkZ0sUCPwveaMQv7uLw_WYSmEN3-fQnr"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-space-xs">
+<span class="inline-flex items-center gap-1 text-label-sm font-label-sm text-primary font-bold bg-primary-fixed px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px]" data-icon="timer">timer</span> 35 min
+                </span>
+<div class="flex items-center gap-1">
+<button aria-label="Editar Pizza casera" class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors" onclick="openModal('Pizza casera', 'Cena')" title="Editar plato">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+<button aria-label="Eliminar Pizza casera" class="w-8 h-8 rounded-full flex items-center justify-center text-outline hover:text-error hover:bg-error-container/40 transition-colors" onclick="confirmDelete('Pizza casera')" title="Eliminar plato">
+<span class="material-symbols-outlined text-[18px]" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<h2 class="text-title-md font-title-md font-bold text-on-surface mt-1 truncate">Pizza casera</h2>
+<div class="flex flex-wrap gap-1 mt-1.5">
+<span class="text-label-sm font-label-sm bg-surface-container text-on-surface-variant px-2 py-0.5 rounded">Cena</span>
+<span class="text-label-sm font-label-sm bg-surface-container text-on-surface-variant px-2 py-0.5 rounded">Fin de semana</span>
+<span class="text-label-sm font-label-sm bg-surface-container text-on-surface-variant px-2 py-0.5 rounded">Horno</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-sm mt-space-sm border border-surface-container">
+<div class="flex items-center gap-2 mb-1.5">
+<span class="material-symbols-outlined text-primary text-[18px]" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="text-label-md font-label-md font-bold text-primary">Le gusta a:</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant ml-auto">¡A todos los miembros!</span>
+</div>
+<div class="flex items-center gap-2 pt-1 border-t border-outline-variant/40">
+<div class="flex -space-x-1.5 overflow-hidden">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#f28b82] text-white text-label-sm font-bold ring-2 ring-white" title="Chini">C</span>
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#fbbc04] text-white text-label-sm font-bold ring-2 ring-white" title="Inglis">I</span>
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#81c995] text-white text-label-sm font-bold ring-2 ring-white" title="Mamá">M</span>
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#78a9ff] text-white text-label-sm font-bold ring-2 ring-white" title="Lucas">L</span>
+</div>
+<div class="flex flex-wrap gap-1.5 text-body-sm font-body-sm text-on-surface-variant">
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#fbbc04]"></span> Inglis</span>
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#f28b82]"></span> Chini</span>
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#81c995]"></span> Mamá</span>
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#78a9ff]"></span> Lucas</span>
+</div>
+</div>
+</div>
+</div>
+</article>
+<!-- CARD 3: Salmón con verduras -->
+<article class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-md transition-shadow duration-200 border border-surface-container-high flex flex-col justify-between">
+<div>
+<div class="flex items-start gap-space-md mb-space-md">
+<div class="w-20 h-20 rounded-xl overflow-hidden shrink-0 relative bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Tender grilled salmon fillet garnished with dill and lemon slices, served alongside steamed asparagus and glazed carrots on a crisp white plate in a clean bright modern kitchen interior with subtle purple accent napkins." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1D1uasBdf_j_QAxoOzXwS_-WXjx17OSz7JIXl3q7JnXn2bWBqMFO2Iz8z1hdqSZRR6zhAbJmeaBi7nB2NAvuyR1Be2lnQbxUJJnhv4LB7yJp3Yq8gCgTqPteJ3bK6FjC32yH3I9WMaUlEFy2hv9lwZv59SMjclOGVVwEFw6H1cc_-H5Ma2X2EOS9HfHXeC47QmA9AyR03FH7BnAjM32BVzyKDVMh3YF2QUl1h2au1qzKS948qWhzQ"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-space-xs">
+<span class="inline-flex items-center gap-1 text-label-sm font-label-sm text-primary font-bold bg-primary-fixed px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px]" data-icon="timer">timer</span> 20 min
+                </span>
+<div class="flex items-center gap-1">
+<button aria-label="Editar Salmón con verduras" class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors" onclick="openModal('Salmón con verduras', 'Cena')" title="Editar plato">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+<button aria-label="Eliminar Salmón con verduras" class="w-8 h-8 rounded-full flex items-center justify-center text-outline hover:text-error hover:bg-error-container/40 transition-colors" onclick="confirmDelete('Salmón con verduras')" title="Eliminar plato">
+<span class="material-symbols-outlined text-[18px]" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<h2 class="text-title-md font-title-md font-bold text-on-surface mt-1 truncate">Salmón con verduras</h2>
+<div class="flex flex-wrap gap-1 mt-1.5">
+<span class="text-label-sm font-label-sm bg-surface-container text-on-surface-variant px-2 py-0.5 rounded">Cena</span>
+<span class="text-label-sm font-label-sm bg-surface-container text-on-surface-variant px-2 py-0.5 rounded">Saludable</span>
+<span class="text-label-sm font-label-sm bg-secondary-fixed text-on-secondary-fixed font-medium px-2 py-0.5 rounded">Rápido</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-sm mt-space-sm border border-surface-container">
+<div class="flex items-center gap-2 mb-1.5">
+<span class="material-symbols-outlined text-primary text-[18px]" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="text-label-md font-label-md font-bold text-primary">Le gusta a:</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant ml-auto">A Inglis y Mamá</span>
+</div>
+<div class="flex items-center gap-2 pt-1 border-t border-outline-variant/40">
+<div class="flex -space-x-1.5 overflow-hidden">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#fbbc04] text-white text-label-sm font-bold ring-2 ring-white" title="Inglis">I</span>
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#81c995] text-white text-label-sm font-bold ring-2 ring-white" title="Mamá">M</span>
+</div>
+<div class="flex flex-wrap gap-1.5 text-body-sm font-body-sm text-on-surface-variant">
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#fbbc04]"></span> Inglis</span>
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#81c995]"></span> Mamá</span>
+</div>
+</div>
+</div>
+</div>
+</article>
+<!-- CARD 4: Pasta carbonara tradicional -->
+<article class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-md transition-shadow duration-200 border border-surface-container-high flex flex-col justify-between">
+<div>
+<div class="flex items-start gap-space-md mb-space-md">
+<div class="w-20 h-20 rounded-xl overflow-hidden shrink-0 relative bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Classic Italian spaghetti carbonara coated with rich egg yolk and pecorino cream, sprinkled with crispy guanciale and black pepper, elegantly arranged in an immaculate light-filled kitchen space." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfsyEIpxWAJTr76dodrEF2sVBib9GqyMccnLuVdDv38gwLcNpJ1TwJ5UTill6p4TPvg3uXEJmhk2JSF-w-3DCFWhyjR9nX1xDZIBZd86WlNtR0YOJcVGbLeGjALuX1rcz_Mmy-wCmgFkmb1JBLyyrIUInDZYaGvYObFCx2FMUhLH5Z2vex18yF1BlTsRKgugiTHPWFTom7zUxr5fmn4GXQw2H-ongH2x1rDjCl-ffg7YW94T3PK_0Q"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-space-xs">
+<span class="inline-flex items-center gap-1 text-label-sm font-label-sm text-primary font-bold bg-primary-fixed px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px]" data-icon="timer">timer</span> 25 min
+                </span>
+<div class="flex items-center gap-1">
+<button aria-label="Editar Pasta carbonara tradicional" class="w-8 h-8 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors" onclick="openModal('Pasta carbonara tradicional', 'Almuerzo')" title="Editar plato">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+<button aria-label="Eliminar Pasta carbonara tradicional" class="w-8 h-8 rounded-full flex items-center justify-center text-outline hover:text-error hover:bg-error-container/40 transition-colors" onclick="confirmDelete('Pasta carbonara tradicional')" title="Eliminar plato">
+<span class="material-symbols-outlined text-[18px]" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<h2 class="text-title-md font-title-md font-bold text-on-surface mt-1 truncate">Pasta carbonara tradicional</h2>
+<div class="flex flex-wrap gap-1 mt-1.5">
+<span class="text-label-sm font-label-sm bg-surface-container text-on-surface-variant px-2 py-0.5 rounded">Almuerzo</span>
+<span class="text-label-sm font-label-sm bg-surface-container text-on-surface-variant px-2 py-0.5 rounded">Pasta</span>
+<span class="text-label-sm font-label-sm bg-surface-container text-on-surface-variant px-2 py-0.5 rounded">Favorito</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-sm mt-space-sm border border-surface-container">
+<div class="flex items-center gap-2 mb-1.5">
+<span class="material-symbols-outlined text-primary text-[18px]" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="text-label-md font-label-md font-bold text-primary">Le gusta a:</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant ml-auto">A Inglis, Chini y Lucas</span>
+</div>
+<div class="flex items-center gap-2 pt-1 border-t border-outline-variant/40">
+<div class="flex -space-x-1.5 overflow-hidden">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#fbbc04] text-white text-label-sm font-bold ring-2 ring-white" title="Inglis">I</span>
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#f28b82] text-white text-label-sm font-bold ring-2 ring-white" title="Chini">C</span>
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#78a9ff] text-white text-label-sm font-bold ring-2 ring-white" title="Lucas">L</span>
+</div>
+<div class="flex flex-wrap gap-1.5 text-body-sm font-body-sm text-on-surface-variant">
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#fbbc04]"></span> Inglis</span>
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#f28b82]"></span> Chini</span>
+<span class="inline-flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#78a9ff]"></span> Lucas</span>
+</div>
+</div>
+</div>
+</div>
+</article>
+</div>
+</main>
+<!-- FLOATING ACTION BUTTON (FAB) FOR ADDING MEAL -->
+<button aria-label="Añadir nueva comida" class="fixed bottom-20 right-4 md:right-8 z-40 bg-primary-container text-on-primary-container hover:bg-primary hover:text-on-primary shadow-lg hover:shadow-xl w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-200 active:scale-95" onclick="openModal()">
+<span class="material-symbols-outlined text-[28px]" data-icon="add">add</span>
+</button>
+<!-- MODAL / FORM: Añadir / Editar Comida -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-200" id="mealModal">
+<div class="bg-surface-container-high rounded-2xl max-w-lg w-full p-space-lg shadow-xl transform scale-95 transition-transform duration-200 flex flex-col max-h-[90vh]">
+<!-- Modal Header -->
+<div class="flex items-center justify-between pb-space-sm border-b border-outline-variant/40">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]" data-icon="restaurant">restaurant</span>
+</div>
+<h2 class="text-title-lg font-title-lg font-bold text-on-surface" id="modalTitle">Añadir Comida</h2>
+</div>
+<button class="w-9 h-9 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container active:scale-95" onclick="closeModal()">
+<span class="material-symbols-outlined text-[22px]" data-icon="close">close</span>
+</button>
+</div>
+<!-- Modal Body (Scrollable Form) -->
+<form class="overflow-y-auto py-space-md space-y-space-md flex-1 pr-1" id="mealForm" onsubmit="handleSaveMeal(event)">
+<!-- Field 1: Nombre de la comida -->
+<div>
+<label class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Nombre de la comida *</label>
+<div class="relative">
+<input class="w-full h-12 px-3 bg-surface-container-lowest rounded-lg border border-outline focus:border-2 focus:border-primary focus:outline-none text-body-md font-body-md text-on-surface placeholder-outline" id="mealNameInput" placeholder="Ej. Lentejas con chorizo, Paella..." required="" type="text"/>
+</div>
+</div>
+<!-- Field 2: Tipo de plato -->
+<div class="grid grid-cols-2 gap-space-md">
+<div>
+<label class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Tipo de plato</label>
+<select class="w-full h-12 px-3 bg-surface-container-lowest rounded-lg border border-outline focus:border-2 focus:border-primary focus:outline-none text-body-md font-body-md text-on-surface" id="mealTypeSelect">
+<option value="Almuerzo">Almuerzo</option>
+<option value="Cena">Cena</option>
+<option value="Desayuno / Merienda">Desayuno / Merienda</option>
+<option value="Cualquiera">Cualquiera</option>
+</select>
+</div>
+<div>
+<label class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Tiempo estimado</label>
+<div class="relative">
+<input class="w-full h-12 px-3 bg-surface-container-lowest rounded-lg border border-outline focus:border-2 focus:border-primary focus:outline-none text-body-md font-body-md text-on-surface" id="mealTimeInput" placeholder="Minutos (ej. 30)" type="number"/>
+</div>
+</div>
+</div>
+<!-- Field 3: Selector de chips con miembros familiares -->
+<div>
+<div class="flex items-center justify-between mb-2">
+<label class="text-body-sm font-body-sm font-medium text-on-surface">¿A quién le gusta este plato?</label>
+<span class="text-label-sm font-label-sm text-outline">Selecciona los miembros</span>
+</div>
+<div class="grid grid-cols-2 gap-2" id="familyChipsContainer">
+<!-- Chip Inglis -->
+<button class="member-chip flex items-center gap-2 p-2.5 rounded-xl border border-outline-variant bg-surface-container-lowest hover:bg-surface-container transition-all text-left" onclick="toggleChip(this)" type="button">
+<span class="w-3.5 h-3.5 rounded-full bg-[#fbbc04] shrink-0"></span>
+<span class="text-body-md font-body-md font-medium text-on-surface flex-1">Inglis</span>
+<span class="chip-check material-symbols-outlined text-primary text-[18px] opacity-0 transition-opacity" data-icon="check" style="font-variation-settings: 'FILL' 1;">check</span>
+</button>
+<!-- Chip Chini -->
+<button class="member-chip active flex items-center gap-2 p-2.5 rounded-xl border border-primary bg-primary-fixed hover:bg-primary-fixed/80 transition-all text-left" onclick="toggleChip(this)" type="button">
+<span class="w-3.5 h-3.5 rounded-full bg-[#f28b82] shrink-0"></span>
+<span class="text-body-md font-body-md font-medium text-on-surface flex-1">Chini</span>
+<span class="chip-check material-symbols-outlined text-primary text-[18px] opacity-100 transition-opacity" data-icon="check" style="font-variation-settings: 'FILL' 1;">check</span>
+</button>
+<!-- Chip Mamá -->
+<button class="member-chip active flex items-center gap-2 p-2.5 rounded-xl border border-primary bg-primary-fixed hover:bg-primary-fixed/80 transition-all text-left" onclick="toggleChip(this)" type="button">
+<span class="w-3.5 h-3.5 rounded-full bg-[#81c995] shrink-0"></span>
+<span class="text-body-md font-body-md font-medium text-on-surface flex-1">Mamá</span>
+<span class="chip-check material-symbols-outlined text-primary text-[18px] opacity-100 transition-opacity" data-icon="check" style="font-variation-settings: 'FILL' 1;">check</span>
+</button>
+<!-- Chip Lucas -->
+<button class="member-chip flex items-center gap-2 p-2.5 rounded-xl border border-outline-variant bg-surface-container-lowest hover:bg-surface-container transition-all text-left" onclick="toggleChip(this)" type="button">
+<span class="w-3.5 h-3.5 rounded-full bg-[#78a9ff] shrink-0"></span>
+<span class="text-body-md font-body-md font-medium text-on-surface flex-1">Lucas</span>
+<span class="chip-check material-symbols-outlined text-primary text-[18px] opacity-0 transition-opacity" data-icon="check" style="font-variation-settings: 'FILL' 1;">check</span>
+</button>
+</div>
+</div>
+<!-- Field 4: Etiquetas adicionales -->
+<div>
+<label class="block text-body-sm font-body-sm font-medium text-on-surface mb-1">Etiquetas (separadas por coma)</label>
+<input class="w-full h-12 px-3 bg-surface-container-lowest rounded-lg border border-outline focus:border-2 focus:border-primary focus:outline-none text-body-md font-body-md text-on-surface" placeholder="Ej. Legumbres, Casero, Sin gluten" type="text"/>
+</div>
+</form>
+<!-- Modal Footer Action Buttons -->
+<div class="pt-space-sm border-t border-outline-variant/40 flex items-center justify-end gap-space-sm">
+<button class="text-primary font-label-lg text-label-lg px-4 py-2.5 rounded-full hover:bg-surface-container transition-colors" onclick="closeModal()" type="button">
+          Cancelar
+        </button>
+<button class="bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg px-6 py-2.5 rounded-full shadow-sm hover:shadow active:scale-95 transition-all" form="mealForm" type="submit">
+          Guardar Comida
+        </button>
+</div>
+</div>
+</div>
+<!-- DELETE CONFIRMATION DIALOG -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm hidden opacity-0 transition-opacity duration-150" id="deleteModal">
+<div class="bg-surface-container-high rounded-2xl max-w-sm w-full p-space-lg shadow-xl text-center transform scale-95 transition-transform duration-150">
+<div class="w-12 h-12 rounded-full bg-error-container text-on-error-container mx-auto flex items-center justify-center mb-space-sm">
+<span class="material-symbols-outlined text-[24px]" data-icon="delete">delete</span>
+</div>
+<h3 class="text-title-md font-title-md font-bold text-on-surface mb-1">¿Eliminar plato?</h3>
+<p class="text-body-md font-body-md text-on-surface-variant mb-space-lg" id="deleteMealTarget">¿Estás seguro de que deseas eliminar esta comida del recetario familiar?</p>
+<div class="flex items-center justify-end gap-space-sm">
+<button class="text-primary font-label-lg text-label-lg px-4 py-2 rounded-full hover:bg-surface-container transition-colors" onclick="closeDeleteModal()">
+          Cancelar
+        </button>
+<button class="bg-error hover:bg-error/90 text-on-error font-label-lg text-label-lg px-5 py-2 rounded-full shadow-sm active:scale-95 transition-all" onclick="executeDelete()">
+          Eliminar
+        </button>
+</div>
+</div>
+</div>
+<!-- BOTTOM NAVBAR (Shared Components JSON Compliant) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-space-sm py-space-xs shadow-[0_-1px_3px_0_rgba(0,0,0,0.08)] bg-surface-container-lowest dark:bg-inverse-surface">
+<!-- Item 1: Inicio (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="home">home</span>
+<span class="text-label-md font-label-md mt-0.5">Inicio</span>
+</a>
+<!-- Item 2: Menú (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="calendar_month">calendar_month</span>
+<span class="text-label-md font-label-md mt-0.5">Menú</span>
+</a>
+<!-- Item 3: Comidas (ACTIVE DESTINATION) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-secondary text-on-secondary-container dark:text-on-secondary rounded-full px-4 py-1 hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="restaurant_menu" style="font-variation-settings: 'FILL' 1;">restaurant_menu</span>
+<span class="text-label-md font-label-md mt-0.5 font-bold">Comidas</span>
+</a>
+<!-- Item 4: Familia (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:bg-surface-container dark:hover:bg-surface-variant transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="group">group</span>
+<span class="text-label-md font-label-md mt-0.5">Familia</span>
+</a>
+</nav>
+<!-- Interactive Logic for Modal & Chips -->
+<script>
+    const modal = document.getElementById('mealModal');
+    const deleteModal = document.getElementById('deleteModal');
+    let mealPendingDeletion = null;
+
+    function openModal(title = '', type = 'Almuerzo') {
+      const modalTitle = document.getElementById('modalTitle');
+      const nameInput = document.getElementById('mealNameInput');
+      const typeSelect = document.getElementById('mealTypeSelect');
+
+      if (title) {
+        modalTitle.textContent = 'Editar Comida';
+        nameInput.value = title;
+        typeSelect.value = type;
+      } else {
+        modalTitle.textContent = 'Añadir Comida';
+        nameInput.value = '';
+        typeSelect.value = 'Almuerzo';
+      }
+
+      modal.classList.remove('hidden');
+      setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        modal.querySelector('.transform').classList.remove('scale-95');
+      }, 10);
+    }
+
+    function closeModal() {
+      modal.classList.add('opacity-0');
+      modal.querySelector('.transform').classList.add('scale-95');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 200);
+    }
+
+    function toggleChip(button) {
+      const isSelected = button.classList.contains('active');
+      const checkIcon = button.querySelector('.chip-check');
+
+      if (isSelected) {
+        button.classList.remove('active', 'border-primary', 'bg-primary-fixed');
+        button.classList.add('border-outline-variant', 'bg-surface-container-lowest');
+        checkIcon.classList.remove('opacity-100');
+        checkIcon.classList.add('opacity-0');
+      } else {
+        button.classList.add('active', 'border-primary', 'bg-primary-fixed');
+        button.classList.remove('border-outline-variant', 'bg-surface-container-lowest');
+        checkIcon.classList.remove('opacity-0');
+        checkIcon.classList.add('opacity-100');
+      }
+    }
+
+    function handleSaveMeal(e) {
+      e.preventDefault();
+      closeModal();
+    }
+
+    function confirmDelete(mealName) {
+      mealPendingDeletion = mealName;
+      document.getElementById('deleteMealTarget').textContent = `¿Estás seguro de que deseas eliminar "${mealName}" del recetario familiar?`;
+      deleteModal.classList.remove('hidden');
+      setTimeout(() => {
+        deleteModal.classList.remove('opacity-0');
+        deleteModal.querySelector('.transform').classList.remove('scale-95');
+      }, 10);
+    }
+
+    function closeDeleteModal() {
+      deleteModal.classList.add('opacity-0');
+      deleteModal.querySelector('.transform').classList.add('scale-95');
+      setTimeout(() => {
+        deleteModal.classList.add('hidden');
+        mealPendingDeletion = null;
+      }, 150);
+    }
+
+    function executeDelete() {
+      closeDeleteModal();
+    }
+  </script>
+</body></html>

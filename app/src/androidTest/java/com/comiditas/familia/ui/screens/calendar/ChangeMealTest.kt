@@ -1,9 +1,10 @@
 package com.comiditas.familia.ui.screens.calendar
 
-import androidx.compose.material3.MaterialTheme
+import com.comiditas.familia.ui.theme.ComiditasFamiliaTheme
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.room.Room
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -51,7 +52,7 @@ class ChangeMealTest {
         }
         useCase.saveDay(date.toString(), original)
         compose.setContent {
-            MaterialTheme {
+            ComiditasFamiliaTheme {
                 val preparationError = androidx.compose.runtime.remember {
                     androidx.compose.runtime.mutableStateOf<String?>(null)
                 }
@@ -80,7 +81,7 @@ class ChangeMealTest {
         runBlocking {
             MealPreferenceRepository(database.mealPreferenceDao()).setPreference(1, 2, false)
         }
-        compose.onNodeWithText("Cambiar").performClick()
+        compose.onNodeWithText("Cambiar").performScrollTo().performClick()
         compose.onNodeWithText("No se puede sustituir «Meal 1»: Member 1 no tiene otra comida disponible que le guste. " +
             "Revisa las comidas y los gustos. El plan guardado no se modifica.").assertExists()
         runBlocking { assertEquals(original, repository.getByDate(date.toString()).sortedBy { it.memberId }) }
@@ -89,15 +90,15 @@ class ChangeMealTest {
     }
 
     @Test fun dishLevelPreviewCancelThenExplicitConfirmation() {
-        compose.onNodeWithText("Cambiar").performClick()
+        compose.onNodeWithText("Cambiar").performScrollTo().performClick()
         compose.onNodeWithText("Meal 2: Member 1, Member 2").assertExists()
-        compose.onNodeWithText("Elegir").performClick()
+        compose.onNodeWithText("Elegir").performScrollTo().performClick()
         runBlocking { assertEquals(original, repository.getByDate(date.toString()).sortedBy { it.memberId }) }
         compose.onNodeWithText("Cancelar").performClick()
         runBlocking { assertEquals(original, repository.getByDate(date.toString()).sortedBy { it.memberId }) }
-        compose.onNodeWithText("Cambiar").performClick()
-        compose.onNodeWithText("Elegir").performClick()
-        compose.onNodeWithText("Confirmar cambio").performClick()
+        compose.onNodeWithText("Cambiar").performScrollTo().performClick()
+        compose.onNodeWithText("Elegir").performScrollTo().performClick()
+        compose.onNodeWithText("Confirmar cambio").performScrollTo().performClick()
         runBlocking {
             assertEquals(original.map { it.copy(mealId = 2) },
                 repository.getByDate(date.toString()).sortedBy { it.memberId })

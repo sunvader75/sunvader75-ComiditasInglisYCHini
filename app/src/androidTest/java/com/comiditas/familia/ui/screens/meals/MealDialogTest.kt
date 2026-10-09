@@ -1,6 +1,12 @@
 package com.comiditas.familia.ui.screens.meals
 
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.performScrollTo
+import com.comiditas.familia.ui.theme.ComiditasFamiliaTheme
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.assertIsNotSelected
@@ -67,6 +73,24 @@ class MealDialogTest {
         compose.onNodeWithText("Nombre *").performTextReplacement("Sopa")
         compose.onNodeWithText("Guardar").performClick()
         assertEquals("Sopa" to emptySet<Long>(), saved)
+    }
+
+    @Test fun largeFontEditorCanReachLastMemberAndSaveSelection() {
+        val manyMembers = (1L..12L).map { FamilyMember(it, "Miembro $it", 0) }
+        var saved: Pair<String, Set<Long>>? = null
+        compose.setContent {
+            val density = LocalDensity.current
+            CompositionLocalProvider(LocalDensity provides Density(density.density, 2f)) {
+                ComiditasFamiliaTheme {
+                    MealDialog(Meal(7, "Sopa"), manyMembers, setOf(1L), false, null,
+                        onDismiss = {}, onConfirm = { name, ids -> saved = name to ids })
+                }
+            }
+        }
+        compose.onNodeWithText("Miembro 12").performScrollTo().assertIsDisplayed().performClick()
+        compose.onNodeWithText("Miembro 12").assertIsSelected()
+        compose.onNodeWithText("Guardar").assertIsDisplayed().performClick()
+        assertEquals("Sopa" to setOf(1L, 12L), saved)
     }
 
     @Test fun cardShowsLikingNamesOrZeroLikesButNeverLegacyDescription() {

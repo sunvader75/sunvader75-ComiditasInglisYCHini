@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Comiditas Inglis &amp; Chini - Dashboard</title>
+<!-- Material Symbols Outlined font -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Roboto Flex -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Theme Configuration Verbatim -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary": "#ffffff",
+            "on-secondary-fixed": "#1e192b",
+            "inverse-primary": "#cfbdff",
+            "on-primary-container": "#dfd2ff",
+            "background": "#fef7ff",
+            "on-tertiary-container": "#ffcbda",
+            "secondary": "#625b71",
+            "on-surface-variant": "#494551",
+            "error": "#ba1a1a",
+            "on-secondary-container": "#686177",
+            "outline": "#7a7582",
+            "surface-container-highest": "#e7e0ec",
+            "tertiary-container": "#7d5260",
+            "tertiary-fixed": "#ffd9e3",
+            "surface": "#fef7ff",
+            "surface-tint": "#6650a4",
+            "on-tertiary-fixed-variant": "#633b48",
+            "tertiary-fixed-dim": "#eeb8c8",
+            "on-error": "#ffffff",
+            "on-secondary-fixed-variant": "#4a4358",
+            "primary-fixed-dim": "#cfbdff",
+            "tertiary": "#633b48",
+            "primary": "#4e378a",
+            "inverse-surface": "#322f38",
+            "inverse-on-surface": "#f6eefb",
+            "on-primary": "#ffffff",
+            "on-primary-fixed": "#21005d",
+            "surface-container-lowest": "#ffffff",
+            "primary-container": "#6650a4",
+            "secondary-fixed": "#e8def9",
+            "on-tertiary": "#ffffff",
+            "on-background": "#1d1a23",
+            "surface-container": "#f3ebf8",
+            "surface-bright": "#fef7ff",
+            "on-primary-fixed-variant": "#4e388a",
+            "secondary-fixed-dim": "#ccc2dc",
+            "primary-fixed": "#e8ddff",
+            "surface-container-low": "#f8f1fe",
+            "on-tertiary-fixed": "#31111d",
+            "error-container": "#ffdad6",
+            "surface-variant": "#e7e0ec",
+            "surface-dim": "#dfd7e4",
+            "surface-container-high": "#ede5f2",
+            "secondary-container": "#e8def9",
+            "on-surface": "#1d1a23",
+            "outline-variant": "#cac4d2",
+            "on-error-container": "#93000a"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-desktop": "2rem",
+            "space-sm": "0.5rem",
+            "gutter-desktop": "1.5rem",
+            "space-lg": "1rem",
+            "margin": "1rem",
+            "space-md": "0.75rem",
+            "space-xl": "1.5rem",
+            "space-xs": "0.25rem",
+            "gutter": "1rem"
+          },
+          "fontFamily": {
+            "body-md": ["Roboto Flex"],
+            "headline-md": ["Roboto Flex"],
+            "label-md": ["Roboto Flex"],
+            "display-lg-mobile": ["Roboto Flex"],
+            "title-lg": ["Roboto Flex"],
+            "title-sm": ["Roboto Flex"],
+            "body-sm": ["Roboto Flex"],
+            "display-lg": ["Roboto Flex"],
+            "body-lg": ["Roboto Flex"],
+            "label-sm": ["Roboto Flex"],
+            "label-lg": ["Roboto Flex"],
+            "title-md": ["Roboto Flex"]
+          },
+          "fontSize": {
+            "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.25px", "fontWeight": "400" }],
+            "headline-md": ["28px", { "lineHeight": "36px", "letterSpacing": "0px", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+            "display-lg-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.25px", "fontWeight": "400" }],
+            "title-lg": ["22px", { "lineHeight": "28px", "letterSpacing": "0px", "fontWeight": "400" }],
+            "title-sm": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.4px", "fontWeight": "400" }],
+            "display-lg": ["57px", { "lineHeight": "64px", "letterSpacing": "-0.25px", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0.5px", "fontWeight": "400" }],
+            "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }],
+            "title-md": ["16px", { "lineHeight": "24px", "letterSpacing": "0.15px", "fontWeight": "500" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md min-h-screen antialiased flex flex-col selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- ==================== TOP APP BAR ==================== -->
+<header class="sticky top-0 z-40 bg-surface shadow-sm">
+<div class="flex justify-between items-center w-full px-space-lg py-space-sm max-w-7xl mx-auto">
+<!-- Leading: Avatar + App Title -->
+<div class="flex items-center gap-space-sm">
+<div class="relative w-11 h-11 rounded-full overflow-hidden border-2 border-primary-fixed bg-surface-container flex items-center justify-center shadow-sm">
+<img alt="Avatar de la familia Inglis y Chini" class="w-full h-full object-cover" data-alt="A warm, soft-focus candid portrait of a happy family cooking together in a bright, sunlit modern kitchen. Natural light streams across clean white quartz countertops, with fresh green herbs and colorful organic ingredients arranged nearby. The atmosphere is cozy, domestic, and clean with rich warm culinary tones and gentle pastel reflections." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4zJHOKEHed41ZIn4PsDd20rja5wiSKfjb8ywUjJCRsU6oXU3etllfi9pi_PvuGfsj-0Xcvgc4JgiR9xLY8bFUFOBv8Ukb6bh4wMq3Dvw-Qz8PDfb2CmoY9FVi6dcN1Q0xNpwUkleUnldvmg2g6pqFfbdEKIePdDjYqYO6ulB6fvduYP-VRZ1iIw7JA2dKZACRIGBo4XCPVqNOEpbKjb4iplv4ZDYc5-gkKWhEtfAHulRZxhx1dv-z"/>
+</div>
+<div class="flex flex-col">
+<span class="text-title-lg font-title-lg font-bold text-primary tracking-tight">Comiditas Inglis &amp; Chini</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></span>
+            Semana activa · Plan al día
+          </span>
+</div>
+</div>
+<!-- Trailing: Notifications & Desktop Nav Links -->
+<div class="flex items-center gap-space-sm">
+<nav class="hidden md:flex items-center gap-2 mr-2">
+<a class="px-3 py-1.5 rounded-full text-label-lg font-label-lg text-primary font-bold bg-secondary-container" href="#">Inicio</a>
+<a class="px-3 py-1.5 rounded-full text-label-lg font-label-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-150" href="#">Menú</a>
+<a class="px-3 py-1.5 rounded-full text-label-lg font-label-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-150" href="#">Comidas</a>
+<a class="px-3 py-1.5 rounded-full text-label-lg font-label-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-150" href="#">Familia</a>
+</nav>
+<button aria-label="Notificaciones" class="relative w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container active:scale-95 transition-all duration-150" type="button">
+<span class="material-symbols-outlined text-[24px]" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2.5 h-2.5 bg-error rounded-full ring-2 ring-surface"></span>
+</button>
+</div>
+</div>
+</header>
+<!-- ==================== MAIN CONTENT CANVAS ==================== -->
+<main class="flex-1 w-full max-w-7xl mx-auto px-space-lg py-space-lg pb-24 md:pb-12 flex flex-col gap-space-xl">
+<!-- Hero / Saludo y Quick Action Highlight -->
+<section class="flex flex-col md:flex-row md:items-center justify-between gap-space-lg bg-gradient-to-r from-surface-container-low via-surface-container to-secondary-container/40 p-space-lg md:p-space-xl rounded-3xl shadow-sm border border-outline-variant/30">
+<div class="flex flex-col gap-space-xs max-w-2xl">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest shadow-sm text-primary text-label-sm font-label-sm w-fit">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">favorite</span>
+          Hogar &amp; Organización culinaria
+        </div>
+<h1 class="text-headline-md font-headline-md font-bold text-on-surface tracking-tight">
+          ¡Hola, familia! 👋
+        </h1>
+<p class="text-body-lg font-body-lg text-on-surface-variant">
+          Planificar la comida nunca fue tan fácil. Hoy es <span class="font-semibold text-primary">Jueves, 24 de Octubre</span> y los menús están completamente coordinados según los gustos de casa.
+        </p>
+</div>
+<!-- Botón Rápido Destacado -->
+<div class="flex flex-wrap items-center gap-space-sm pt-2 md:pt-0">
+<button class="inline-flex items-center justify-center gap-space-sm bg-primary text-on-primary hover:bg-primary-container px-6 py-3 rounded-full text-label-lg font-label-lg shadow-md hover:shadow-lg active:scale-95 transition-all duration-150 min-h-[48px]" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="auto_awesome" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span>Generar menú de esta semana</span>
+</button>
+</div>
+</section>
+<!-- Métricas Rápidas / Resumen Bento Strip -->
+<section class="grid grid-cols-1 sm:grid-cols-3 gap-space-md">
+<!-- Métrica 1 -->
+<div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm border border-outline-variant/40 flex items-center gap-space-md hover:border-primary/40 transition-colors">
+<div class="w-12 h-12 rounded-2xl bg-primary-fixed flex items-center justify-center text-primary shadow-sm shrink-0">
+<span class="material-symbols-outlined text-[26px]" data-icon="restaurant">restaurant</span>
+</div>
+<div class="flex flex-col">
+<span class="text-title-lg font-title-lg font-bold text-on-surface leading-tight">14 comidas</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Registradas en recetario</span>
+</div>
+</div>
+<!-- Métrica 2 -->
+<div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm border border-outline-variant/40 flex items-center gap-space-md hover:border-primary/40 transition-colors">
+<div class="w-12 h-12 rounded-2xl bg-secondary-fixed flex items-center justify-center text-secondary shadow-sm shrink-0">
+<span class="material-symbols-outlined text-[26px]" data-icon="group">group</span>
+</div>
+<div class="flex flex-col">
+<span class="text-title-lg font-title-lg font-bold text-on-surface leading-tight">4 miembros</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Con gustos configurados</span>
+</div>
+</div>
+<!-- Métrica 3 -->
+<div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm border border-outline-variant/40 flex items-center gap-space-md hover:border-primary/40 transition-colors">
+<div class="w-12 h-12 rounded-2xl bg-tertiary-fixed flex items-center justify-center text-tertiary shadow-sm shrink-0">
+<span class="material-symbols-outlined text-[26px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex flex-col">
+<span class="text-title-lg font-title-lg font-bold text-on-surface leading-tight">100% completo</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Menú semanal al día</span>
+</div>
+</div>
+</section>
+<!-- WIDGET DESTACADO: Menú de Hoy -->
+<section class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary animate-pulse"></div>
+<h2 class="text-title-lg font-title-lg font-bold text-on-surface">Menú de Hoy</h2>
+<span class="text-body-sm font-body-sm text-on-surface-variant hidden sm:inline">· Jueves con todo listo</span>
+</div>
+<a class="text-label-lg font-label-lg text-primary hover:underline flex items-center gap-1" href="#">
+          Ver semana completa
+          <span class="material-symbols-outlined text-[16px]" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg">
+<!-- Comida (Almuerzo) Card -->
+<article class="bg-surface-container-lowest rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-outline-variant/40 flex flex-col group">
+<div class="relative h-48 w-full overflow-hidden bg-surface-container">
+<img alt="Plato de comida de hoy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A mouthwatering, rustic artisan bowl of creamy pumpkin and carrot soup garnished with toasted pumpkin seeds, fresh rosemary sprigs, and a dollop of creme fraiche. The dish rests on a warm neutral kitchen surface illuminated by soft, bright natural window light, creating an appetizing domestic culinary atmosphere with rich orange and cream tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnxQknILbbeCK_Z0sWqUE5VsUvWTcTwqFypPfslzlNeOLfZdO4_IT9JT7jBlYRyfXwZfg_rlwGZELGvRTtxrVcm5F9o73h8S0TW1JgQtGi_UuQYKfYsfBMc25FJ8iyByiJWakaKVsc558FsJI48O4M9WUvXLYAXZ63kOrWiQB43fzQkOmueczE_wgUIdFXst5MNOQBhY_qxL8MlHjXcjWN-0ub1i7TamCGbhh296as5Z13YK02x9V2"/>
+<div class="absolute top-3 left-3 bg-surface/95 backdrop-blur-md px-3 py-1 rounded-full shadow-sm flex items-center gap-1.5">
+<span class="material-symbols-outlined text-amber-500 text-[18px]" data-icon="wb_sunny">wb_sunny</span>
+<span class="text-label-md font-label-md font-semibold text-on-surface">Almuerzo · 14:00</span>
+</div>
+<div class="absolute top-3 right-3 bg-primary text-on-primary text-label-sm font-label-sm px-2.5 py-1 rounded-full shadow-sm">
+              Plato Principal
+            </div>
+</div>
+<div class="p-space-lg flex flex-col flex-1 justify-between gap-space-md">
+<div>
+<h3 class="text-title-lg font-title-lg font-bold text-on-surface mb-1">
+                Crema de Calabaza y Salmón a la Plancha
+              </h3>
+<p class="text-body-md font-body-md text-on-surface-variant line-clamp-2">
+                Suave y ligera, servida con tostas integrales crujientes y filete de salmón fresco con limón.
+              </p>
+</div>
+<!-- Taxonomía de miembros a quienes les gusta -->
+<div class="pt-2 border-t border-surface-container flex flex-col gap-2">
+<span class="text-label-sm font-label-sm text-on-surface-variant font-medium">¿A quién le gusta?</span>
+<div class="flex flex-wrap items-center gap-2">
+<!-- Miembro 1: Inglis -->
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-body-sm font-body-sm text-on-surface">
+<span class="w-2.5 h-2.5 rounded-full bg-violet-600"></span>
+                  Inglis
+                  <span class="material-symbols-outlined text-[14px] text-primary" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</span>
+<!-- Miembro 2: Chini -->
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-body-sm font-body-sm text-on-surface">
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                  Chini
+                  <span class="material-symbols-outlined text-[14px] text-primary" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</span>
+<!-- Miembro 3: Lucas -->
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-body-sm font-body-sm text-on-surface">
+<span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                  Lucas
+                </span>
+<!-- Miembro 4: Sofi -->
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-body-sm font-body-sm text-on-surface">
+<span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span>
+                  Sofi
+                </span>
+</div>
+</div>
+</div>
+</article>
+<!-- Cena Card -->
+<article class="bg-surface-container-lowest rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-outline-variant/40 flex flex-col group">
+<div class="relative h-48 w-full overflow-hidden bg-surface-container">
+<img alt="Plato de cena de hoy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A delicious golden Spanish potato omelette frittata sliced neatly on an elegant off-white ceramic serving platter. Fresh cherry tomatoes and crispy green salad accompany the dish under soft ambient kitchen lighting, portraying a tidy home-cooked family dinner environment bathed in crisp warm tones with gentle pastel violet highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaf9DQJCSkg34xbd2Z846xQCfUDvJCsCOhGSF8aotOSb0GBWL1AtLvcIduSH7HArBBpd0XOsvdZa5f0NSrb_5M2u1mJI_hIWHGS4XaKHFCXPuwahEO-x7SSXxRi_K6M1dqNnM-KEHs654yb7LdPCGOz2vdh3sycmDyWxY7wZd-65bBHobvKvEE_sTFwaxv84nAG4oaXLAlueJMK3WPdQGVuvHTQAs7rv9LTUgnYweZQH0SD9MEVXog"/>
+<div class="absolute top-3 left-3 bg-surface/95 backdrop-blur-md px-3 py-1 rounded-full shadow-sm flex items-center gap-1.5">
+<span class="material-symbols-outlined text-indigo-400 text-[18px]" data-icon="nights_stay">nights_stay</span>
+<span class="text-label-md font-label-md font-semibold text-on-surface">Cena · 21:00</span>
+</div>
+<div class="absolute top-3 right-3 bg-secondary text-on-secondary text-label-sm font-label-sm px-2.5 py-1 rounded-full shadow-sm">
+              Cena Casera
+            </div>
+</div>
+<div class="p-space-lg flex flex-col flex-1 justify-between gap-space-md">
+<div>
+<h3 class="text-title-lg font-title-lg font-bold text-on-surface mb-1">
+                Tortilla de Patatas Tradicional con Ensalada
+              </h3>
+<p class="text-body-md font-body-md text-on-surface-variant line-clamp-2">
+                Con cebolla caramelizada suave, acompañada de tomates cherry aliñados con aceite de oliva virgen extra.
+              </p>
+</div>
+<!-- Taxonomía de miembros a quienes les gusta -->
+<div class="pt-2 border-t border-surface-container flex flex-col gap-2">
+<span class="text-label-sm font-label-sm text-on-surface-variant font-medium">¿A quién le gusta?</span>
+<div class="flex flex-wrap items-center gap-2">
+<!-- Miembro 1: Todos favorito -->
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container text-body-sm font-body-sm text-on-secondary-container font-medium">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="stars" style="font-variation-settings: 'FILL' 1;">stars</span>
+                  ¡Favorito unánime de los 4!
+                </span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container text-label-sm font-label-sm text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-violet-600"></span> Inglis
+                </span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container text-label-sm font-label-sm text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Chini
+                </span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container text-label-sm font-label-sm text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span> Lucas
+                </span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container text-label-sm font-label-sm text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-rose-400"></span> Sofi
+                </span>
+</div>
+</div>
+</div>
+</article>
+</div>
+</section>
+<!-- ACCESOS DIRECTOS A LAS 3 SECCIONES CLAVE -->
+<section class="flex flex-col gap-space-md">
+<div>
+<h2 class="text-title-lg font-title-lg font-bold text-on-surface">Gestión del Hogar</h2>
+<p class="text-body-md font-body-md text-on-surface-variant">Accede rápidamente a las herramientas de cocina y organización</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+<!-- 1. Menú Semanal -->
+<a class="group bg-surface-container-lowest p-space-lg rounded-3xl shadow-sm hover:shadow-md border border-outline-variant/40 hover:border-primary transition-all duration-200 flex flex-col justify-between h-full" href="#">
+<div class="flex flex-col gap-space-md">
+<div class="w-14 h-14 rounded-2xl bg-primary-fixed flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[32px]" data-icon="calendar_month">calendar_month</span>
+</div>
+<div>
+<span class="text-label-sm font-label-sm uppercase tracking-wider text-primary font-bold">Planificación</span>
+<h3 class="text-title-lg font-title-lg font-bold text-on-surface mt-0.5 group-hover:text-primary transition-colors">
+                Menú Semanal
+              </h3>
+<p class="text-body-md font-body-md text-on-surface-variant mt-1.5">
+                Organiza tus comidas de lunes a viernes y genera planes automáticos adaptados al ritmo escolar y laboral.
+              </p>
+</div>
+</div>
+<div class="pt-4 mt-4 border-t border-surface-container flex items-center justify-between text-primary font-label-lg text-label-lg">
+<span>Ver cuadrante semanal</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</a>
+<!-- 2. Comidas y Recetas -->
+<a class="group bg-surface-container-lowest p-space-lg rounded-3xl shadow-sm hover:shadow-md border border-outline-variant/40 hover:border-primary transition-all duration-200 flex flex-col justify-between h-full" href="#">
+<div class="flex flex-col gap-space-md">
+<div class="w-14 h-14 rounded-2xl bg-secondary-fixed flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[32px]" data-icon="restaurant_menu">restaurant_menu</span>
+</div>
+<div>
+<span class="text-label-sm font-label-sm uppercase tracking-wider text-secondary font-bold">Catálogo</span>
+<h3 class="text-title-lg font-title-lg font-bold text-on-surface mt-0.5 group-hover:text-primary transition-colors">
+                Comidas y Recetas
+              </h3>
+<p class="text-body-md font-body-md text-on-surface-variant mt-1.5">
+                Catálogo de platos caseros, preferencias, ingredientes frecuentes y recetas marcadas como favoritas familiares.
+              </p>
+</div>
+</div>
+<div class="pt-4 mt-4 border-t border-surface-container flex items-center justify-between text-primary font-label-lg text-label-lg">
+<span>Explorar recetario (14)</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</a>
+<!-- 3. Miembros Familiares -->
+<a class="group bg-surface-container-lowest p-space-lg rounded-3xl shadow-sm hover:shadow-md border border-outline-variant/40 hover:border-primary transition-all duration-200 flex flex-col justify-between h-full" href="#">
+<div class="flex flex-col gap-space-md">
+<div class="w-14 h-14 rounded-2xl bg-tertiary-fixed flex items-center justify-center text-tertiary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[32px]" data-icon="group">group</span>
+</div>
+<div>
+<span class="text-label-sm font-label-sm uppercase tracking-wider text-tertiary font-bold">Preferencias</span>
+<h3 class="text-title-lg font-title-lg font-bold text-on-surface mt-0.5 group-hover:text-primary transition-colors">
+                Miembros Familiares
+              </h3>
+<p class="text-body-md font-body-md text-on-surface-variant mt-1.5">
+                Gestiona quién come en casa, colores identificativos y registra qué ingredientes no les gustan o causan alergias.
+              </p>
+</div>
+</div>
+<div class="pt-4 mt-4 border-t border-surface-container flex items-center justify-between text-primary font-label-lg text-label-lg">
+<span>Gestionar 4 perfiles</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</a>
+</div>
+</section>
+<!-- Mini Banner / Tip culinario de la familia -->
+<section class="bg-surface-container p-space-lg rounded-2xl flex items-center justify-between gap-space-md border border-outline-variant/30">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[28px]" data-icon="tips_and_updates">tips_and_updates</span>
+<div class="flex flex-col">
+<span class="text-title-sm font-title-sm font-bold text-on-surface">Consejo de ahorro &amp; organización</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">Puedes añadir ingredientes a la lista de la compra directamente desde el menú semanal generado.</span>
+</div>
+</div>
+<button class="text-label-lg font-label-lg text-primary hover:bg-surface-container-high px-3 py-1.5 rounded-full transition-colors hidden sm:block" type="button">
+        Entendido
+      </button>
+</section>
+</main>
+<!-- ==================== FLOATING ACTION BUTTON (Contextual: Añadir o planificar) ==================== -->
+<div class="fixed bottom-20 md:bottom-8 right-6 z-40">
+<button aria-label="Añadir comida rápida" class="w-14 h-14 rounded-2xl bg-primary text-on-primary shadow-lg hover:shadow-xl hover:bg-primary-container active:scale-95 transition-all duration-150 flex items-center justify-center" title="Añadir plato al recetario" type="button">
+<span class="material-symbols-outlined text-[28px]" data-icon="add">add</span>
+</button>
+</div>
+<!-- ==================== BOTTOM NAV BAR (Mobile Shell strictly from JSON) ==================== -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-space-sm py-space-xs shadow-[0_-1px_3px_0_rgba(0,0,0,0.08)] bg-surface-container-lowest">
+<!-- Item 1: Inicio (ACTIVE) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-label-md font-label-md font-semibold mt-0.5">Inicio</span>
+</a>
+<!-- Item 2: Menú -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="calendar_month">calendar_month</span>
+<span class="text-label-md font-label-md mt-0.5">Menú</span>
+</a>
+<!-- Item 3: Comidas -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="restaurant_menu">restaurant_menu</span>
+<span class="text-label-md font-label-md mt-0.5">Comidas</span>
+</a>
+<!-- Item 4: Familia -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-1 hover:bg-surface-container transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[22px]" data-icon="group">group</span>
+<span class="text-label-md font-label-md mt-0.5">Familia</span>
+</a>
+</nav>
+</body></html>
