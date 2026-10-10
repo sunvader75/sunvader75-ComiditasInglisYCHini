@@ -55,6 +55,14 @@ import com.comiditas.familia.ui.components.FoodSectionHeader
 import com.comiditas.familia.ui.components.MemberNameBadge
 import com.comiditas.familia.ui.theme.ComiditasFamiliaTheme
 
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.RestaurantMenu
+import androidx.compose.material3.CardDefaults
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
+import com.comiditas.familia.ui.theme.FoodSpacing
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MealsScreen(viewModel: MealsViewModel, onBack: () -> Unit) {
@@ -71,7 +79,7 @@ fun MealsScreen(viewModel: MealsViewModel, onBack: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Comidas") },
+                title = { Text("Comidas", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Volver")
@@ -87,15 +95,28 @@ fun MealsScreen(viewModel: MealsViewModel, onBack: () -> Unit) {
                         viewModel.clearError()
                         showDialog = true
                     },
+                    shape = CircleShape,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
                     icon = { Icon(Icons.Default.Add, contentDescription = null) },
-                    text = { Text("Añadir comida") }
+                    text = { Text("Añadir comida", fontWeight = FontWeight.Bold) }
                 )
             }
         }
     ) { padding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .padding(horizontal = FoodSpacing.screen, vertical = FoodSpacing.medium)
         ) {
+            FoodSectionHeader(
+                title = "Recetario Familiar",
+                subtitle = "Catálogo de platos caseros y preferencias de la familia",
+                tag = "Catálogo",
+                modifier = Modifier.padding(bottom = FoodSpacing.medium)
+            )
+
             when {
                 state.isLoading -> FoodEmptyState(
                     title = "Cargando comidas…",
@@ -111,7 +132,7 @@ fun MealsScreen(viewModel: MealsViewModel, onBack: () -> Unit) {
             LazyColumn(
                 modifier = if (state.isLoading || state.meals.isEmpty()) Modifier else Modifier.weight(1f),
                 contentPadding = PaddingValues(bottom = 88.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(FoodSpacing.medium)
             ) {
                 items(state.meals, key = { it.meal.id }) { item ->
                     MealCard(item, onEdit = {
@@ -144,21 +165,104 @@ internal fun MealCard(item: MealWithLikes, onEdit: () -> Unit) {
     Card(
         onClick = onEdit,
         modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+        shape = MaterialTheme.shapes.large,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier.fillMaxWidth().padding(FoodSpacing.large),
+            verticalArrangement = Arrangement.spacedBy(FoodSpacing.medium)
         ) {
-            Text(text = item.meal.name, style = MaterialTheme.typography.titleLarge)
-            Text(
-                text = if (item.likingMembers.isEmpty()) "Sin gustos asignados" else
-                    "Les gusta a: ${item.likingMembers.joinToString { it.name }}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            item.likingMembers.forEach { member ->
-                MemberNameBadge(member.name, Color(member.color))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(FoodSpacing.inset),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(44.dp)
+                            .clip(MaterialTheme.shapes.small)
+                            .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.RestaurantMenu,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                    Text(
+                        text = item.meal.name,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+                Surface(
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.surfaceContainerHigh
+                ) {
+                    Text(
+                        text = "Casero",
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
+
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.medium,
+                color = MaterialTheme.colorScheme.surfaceContainerLow,
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceContainerHigh)
+            ) {
+                Column(
+                    modifier = Modifier.padding(FoodSpacing.medium),
+                    verticalArrangement = Arrangement.spacedBy(FoodSpacing.small)
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Favorite,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Text(
+                            text = if (item.likingMembers.isEmpty()) "Sin gustos asignados" else
+                                "Les gusta a: ${item.likingMembers.joinToString { it.name }}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium,
+                            color = if (item.likingMembers.isEmpty()) MaterialTheme.colorScheme.onSurfaceVariant
+                                else MaterialTheme.colorScheme.primary
+                        )
+                    }
+
+                    if (item.likingMembers.isNotEmpty()) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(FoodSpacing.small),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            item.likingMembers.forEach { member ->
+                                MemberNameBadge(
+                                    name = member.name,
+                                    identityColor = Color(member.color),
+                                    isFavorite = true
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }

@@ -1,9 +1,12 @@
 package com.comiditas.familia.ui.screens.calendar
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -11,9 +14,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.outlined.AutoAwesome
+import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.WbSunny
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -198,20 +207,169 @@ internal fun WeekOverviewHeader(
     onNext: () -> Unit,
     onGenerate: () -> Unit
 ) {
-    Row(
+    val rangeFormatter = remember { DateTimeFormatter.ofPattern("d 'de' MMMM", Locale("es")) }
+    val endOfWeek = weekStart.plusDays(6)
+
+    Column(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(FoodSpacing.small),
-        verticalAlignment = Alignment.CenterVertically
+        verticalArrangement = Arrangement.spacedBy(FoodSpacing.medium)
     ) {
-        IconButton(onClick = onPrevious, enabled = enabled, modifier = Modifier.size(48.dp)) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Semana anterior")
+        // Week selector card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.large,
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = FoodSpacing.medium, vertical = FoodSpacing.small),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(FoodSpacing.small),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(MaterialTheme.shapes.small)
+                            .background(MaterialTheme.colorScheme.surfaceContainer),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.CalendarMonth,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                    Column {
+                        Text(
+                            text = "PLAN ACTIVO",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                        Text(
+                            text = "Semana del ${weekStart.format(rangeFormatter)}",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+
+                Surface(
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.surfaceContainerLow
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(2.dp)
+                    ) {
+                        IconButton(onClick = onPrevious, enabled = enabled, modifier = Modifier.size(40.dp)) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Semana anterior",
+                                tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
+                        }
+                        Text(
+                            text = "Semana",
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        IconButton(onClick = onNext, enabled = enabled, modifier = Modifier.size(40.dp)) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Semana siguiente",
+                                tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(18.dp))
+                        }
+                    }
+                }
+            }
         }
-        Button(onClick = onGenerate, enabled = enabled,
-            modifier = Modifier.weight(1f).heightIn(min = 48.dp)) {
-            Text("Generar semana")
-        }
-        IconButton(onClick = onNext, enabled = enabled, modifier = Modifier.size(48.dp)) {
-            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "Semana siguiente")
+
+        // Royal Iris Hero Generator Banner
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.large,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(FoodSpacing.large),
+                verticalArrangement = Arrangement.spacedBy(FoodSpacing.medium)
+            ) {
+                Surface(
+                    shape = CircleShape,
+                    color = Color.White.copy(alpha = 0.18f),
+                    contentColor = Color.White
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.AutoAwesome,
+                            contentDescription = null,
+                            modifier = Modifier.size(14.dp),
+                            tint = Color.White
+                        )
+                        Text(
+                            text = "Generado automáticamente según preferencias",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Medium,
+                            color = Color.White
+                        )
+                    }
+                }
+
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Text(
+                        text = "Menú Inteligente de Familia",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                    Text(
+                        text = "Balancea gustos de toda la familia minimizando platos repetidos.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primaryContainer
+                    )
+                }
+
+                Button(
+                    onClick = onGenerate,
+                    enabled = enabled,
+                    shape = CircleShape,
+                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                        containerColor = Color.White,
+                        contentColor = MaterialTheme.colorScheme.primary,
+                        disabledContainerColor = Color.White.copy(alpha = 0.6f),
+                        disabledContentColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
+                    ),
+                    modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.AutoAwesome,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(Modifier.size(8.dp))
+                    Text(
+                        text = "Generar semana",
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
+            }
         }
     }
 }
@@ -248,37 +406,128 @@ internal fun WeekMenuContent(
             Card(
                 onClick = { onDateSelected(day.date) },
                 modifier = Modifier.fillMaxWidth().heightIn(min = 48.dp),
+                shape = MaterialTheme.shapes.large,
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
             ) {
-                Column(Modifier.padding(FoodSpacing.medium),
-                    verticalArrangement = Arrangement.spacedBy(FoodSpacing.medium)) {
-                    Text(day.date.format(formatter).replaceFirstChar { it.uppercase() },
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.primary)
+                Column(
+                    modifier = Modifier.padding(FoodSpacing.large),
+                    verticalArrangement = Arrangement.spacedBy(FoodSpacing.medium)
+                ) {
+                    // Day Header Row
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(FoodSpacing.small),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colorScheme.primaryContainer),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = day.date.dayOfWeek.getDisplayName(java.time.format.TextStyle.NARROW, Locale("es")).uppercase(),
+                                    style = MaterialTheme.typography.titleSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                            Text(
+                                text = day.date.format(formatter).replaceFirstChar { it.uppercase() },
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+
+                        if (day.dishes.isNotEmpty()) {
+                            Surface(
+                                shape = CircleShape,
+                                color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.6f)
+                            ) {
+                                Text(
+                                    text = "${day.dishes.size} platos",
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.secondary,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                        }
+                    }
+
                     when {
-                        state.week.error != null -> Text("Menú no disponible",
-                            color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        !state.week.loaded -> Text("Cargando semana…",
-                            color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        day.dishes.isEmpty() -> Text("Sin comidas asignadas",
-                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        state.week.error != null -> Text(
+                            "Menú no disponible",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        !state.week.loaded -> Text(
+                            "Cargando semana…",
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        day.dishes.isEmpty() -> Surface(
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = MaterialTheme.shapes.medium,
+                            color = MaterialTheme.colorScheme.surfaceContainerLow
+                        ) {
+                            Text(
+                                "Sin comidas asignadas",
+                                modifier = Modifier.padding(FoodSpacing.medium),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                         else -> day.dishes.forEach { dish ->
                             Surface(
                                 shape = MaterialTheme.shapes.medium,
-                                color = MaterialTheme.colorScheme.surfaceContainerLow
+                                color = MaterialTheme.colorScheme.surfaceContainerLow,
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.surfaceContainerHigh)
                             ) {
-                                Column(Modifier.fillMaxWidth().padding(FoodSpacing.medium),
-                                    verticalArrangement = Arrangement.spacedBy(FoodSpacing.small)) {
-                                    Text(dish.name, style = MaterialTheme.typography.titleSmall)
+                                Column(
+                                    modifier = Modifier.fillMaxWidth().padding(FoodSpacing.medium),
+                                    verticalArrangement = Arrangement.spacedBy(FoodSpacing.small)
+                                ) {
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.WbSunny,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary,
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                        Text(
+                                            text = "Comida",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.primary
+                                        )
+                                    }
+                                    Text(
+                                        text = dish.name,
+                                        style = MaterialTheme.typography.titleMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
                                     Surface(
-                                        shape = MaterialTheme.shapes.small,
+                                        shape = CircleShape,
                                         color = MaterialTheme.colorScheme.secondaryContainer,
                                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer
                                     ) {
-                                        Text(dish.recipients.joinToString(),
-                                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                                            style = MaterialTheme.typography.labelLarge)
+                                        Text(
+                                            text = dish.recipients.joinToString(),
+                                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                                            style = MaterialTheme.typography.labelMedium,
+                                            fontWeight = FontWeight.Medium
+                                        )
                                     }
                                 }
                             }
