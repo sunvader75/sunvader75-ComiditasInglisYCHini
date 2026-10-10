@@ -8,6 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <!-- Keep native launch and system bars aligned with the light Compose theme. -->
-    <color name="food_cream">#FFFFF8F1</color>
-    <color name="food_terracotta">#FF9C452E</color>
+    <color name="food_canvas">#FFFEF7FF</color>
+    <color name="food_primary">#FF4E378A</color>
+    <!-- Preserve existing resource names for callers. -->
+    <color name="food_cream">@color/food_canvas</color>
+    <color name="food_terracotta">@color/food_primary</color>
 </resources>

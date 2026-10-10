@@ -5,8 +5,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertHasClickAction
+import androidx.compose.ui.test.assertHeightIsAtLeast
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -27,6 +30,7 @@ class HomeScreenTest {
         compose.setContent {
             ComiditasFamiliaTheme { HomeScreen(onNavigate = { routes.add(it) }) }
         }
+        compose.onAllNodes(hasClickAction()).assertCountEquals(3)
         listOf(
             "Comiditas Familia",
             "A la mesa, en familia",
@@ -62,9 +66,15 @@ class HomeScreenTest {
                 }
             }
         }
-        listOf("Menú semanal", "Comidas", "Miembros").forEach { label ->
+        compose.onAllNodes(hasClickAction()).assertCountEquals(3)
+        listOf(
+            "Menú semanal" to "Consulta y edita las comidas de la semana",
+            "Comidas" to "Edita las comidas y a quién le gustan",
+            "Miembros" to "Administra los 3 miembros de la familia"
+        ).forEach { (label, subtitle) ->
             compose.onNodeWithText(label).performScrollTo()
-                .assertIsDisplayed().assertHasClickAction()
+                .assertIsDisplayed().assertHasClickAction().assertHeightIsAtLeast(48.dp)
+            compose.onNodeWithText(subtitle).performScrollTo().assertIsDisplayed()
         }
     }
 }

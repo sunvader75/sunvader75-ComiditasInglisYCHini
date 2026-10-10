@@ -1,18 +1,18 @@
 <resources>
     <!-- API 27 adds dark navigation icons; retain all base theme colors and parents. -->
     <style name="Theme.ComiditasFamilia" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:windowBackground">@color/food_cream</item>
-        <item name="android:colorAccent">@color/food_terracotta</item>
-        <item name="android:statusBarColor">@color/food_cream</item>
-        <item name="android:navigationBarColor">@color/food_cream</item>
+        <item name="android:windowBackground">@color/food_canvas</item>
+        <item name="android:colorAccent">@color/food_primary</item>
+        <item name="android:statusBarColor">@color/food_canvas</item>
+        <item name="android:navigationBarColor">@color/food_canvas</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar">true</item>
     </style>
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/food_cream</item>
-        <item name="android:statusBarColor">@color/food_cream</item>
-        <item name="android:navigationBarColor">@color/food_cream</item>
+        <item name="windowSplashScreenBackground">@color/food_canvas</item>
+        <item name="android:statusBarColor">@color/food_canvas</item>
+        <item name="android:navigationBarColor">@color/food_canvas</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar">true</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>

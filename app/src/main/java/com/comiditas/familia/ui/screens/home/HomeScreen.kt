@@ -13,6 +13,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -27,14 +28,14 @@ import com.comiditas.familia.ui.theme.FoodSpacing
 
 @Composable
 fun HomeScreen(onNavigate: (String) -> Unit) {
-    Scaffold { padding ->
+    Scaffold(containerColor = MaterialTheme.colorScheme.background) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
                 .padding(FoodSpacing.screen),
-            verticalArrangement = Arrangement.spacedBy(FoodSpacing.large)
+            verticalArrangement = Arrangement.spacedBy(FoodSpacing.inset)
         ) {
             HomeNavigationCard(
                 title = "Menú semanal",
@@ -43,19 +44,16 @@ fun HomeScreen(onNavigate: (String) -> Unit) {
                 onClick = { onNavigate(Screen.Calendar.route) }
             )
 
-            Column(verticalArrangement = Arrangement.spacedBy(FoodSpacing.medium)) {
-                HomeNavigationCard(
-                    title = "Comidas",
-                    subtitle = "Edita las comidas y a quién le gustan",
-                    onClick = { onNavigate(Screen.Meals.route) }
-                )
-                HomeNavigationCard(
-                    title = "Miembros",
-                    subtitle = "Administra los 3 miembros de la familia",
-                    family = true,
-                    onClick = { onNavigate(Screen.Members.route) }
-                )
-            }
+            HomeNavigationCard(
+                title = "Comidas",
+                subtitle = "Edita las comidas y a quién le gustan",
+                onClick = { onNavigate(Screen.Meals.route) }
+            )
+            HomeNavigationCard(
+                title = "Miembros",
+                subtitle = "Administra los 3 miembros de la familia",
+                onClick = { onNavigate(Screen.Members.route) }
+            )
         }
     }
 }
@@ -65,19 +63,8 @@ private fun HomeNavigationCard(
     title: String,
     subtitle: String,
     featured: Boolean = false,
-    family: Boolean = false,
     onClick: () -> Unit
 ) {
-    val container = when {
-        featured -> MaterialTheme.colorScheme.primaryContainer
-        family -> MaterialTheme.colorScheme.secondaryContainer
-        else -> MaterialTheme.colorScheme.surface
-    }
-    val content = when {
-        featured -> MaterialTheme.colorScheme.onPrimaryContainer
-        family -> MaterialTheme.colorScheme.onSecondaryContainer
-        else -> MaterialTheme.colorScheme.onSurface
-    }
     Card(
         onClick = onClick,
         modifier = Modifier
@@ -85,25 +72,51 @@ private fun HomeNavigationCard(
             .heightIn(min = FoodSpacing.minimumTouchTarget)
             .semantics { role = Role.Button },
         shape = MaterialTheme.shapes.large,
-        colors = CardDefaults.cardColors(containerColor = container, contentColor = content),
-        border = if (!featured && !family) BorderStroke(
-            1.dp, MaterialTheme.colorScheme.outlineVariant
-        ) else null
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
         Column(
-            modifier = Modifier.padding(FoodSpacing.large),
+            modifier = Modifier.padding(FoodSpacing.medium),
             verticalArrangement = Arrangement.spacedBy(FoodSpacing.small)
         ) {
+            if (featured) {
+                // An inset heading prioritizes planning without a dashboard-sized hero.
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.medium,
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.primary
+                ) {
+                    Text(
+                        text = title,
+                        modifier = Modifier.padding(
+                            horizontal = FoodSpacing.medium,
+                            vertical = FoodSpacing.small
+                        ),
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                }
+            } else {
+                Text(
+                    text = title,
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
             Text(
-                text = title,
-                style = if (featured) MaterialTheme.typography.headlineMedium
-                    else MaterialTheme.typography.titleLarge
+                text = subtitle,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = MaterialTheme.typography.bodyLarge
             )
-            Text(text = subtitle, style = MaterialTheme.typography.bodyLarge)
         }
     }
 }
 
+@Preview(name = "Inicio · compacto", showBackground = true, widthDp = 320, heightDp = 480)
 @Preview(name = "Inicio · estándar", showBackground = true, widthDp = 360, heightDp = 800)
 @Preview(name = "Inicio · compacto · texto grande", showBackground = true,
     widthDp = 320, heightDp = 480, fontScale = 2f)

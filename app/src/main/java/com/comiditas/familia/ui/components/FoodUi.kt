@@ -65,17 +65,17 @@ fun FoodIconContainer(icon: ImageVector, modifier: Modifier = Modifier) {
 fun MemberNameBadge(name: String, identityColor: Color, modifier: Modifier = Modifier) {
     Surface(
         modifier = modifier.semantics(mergeDescendants = true) {},
-        shape = MaterialTheme.shapes.small,
-        color = MaterialTheme.colorScheme.surfaceContainerHigh,
-        contentColor = MaterialTheme.colorScheme.onSurface
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
     ) {
         Row(
-            Modifier.padding(horizontal = 12.dp, vertical = FoodSpacing.small),
-            horizontalArrangement = Arrangement.spacedBy(FoodSpacing.small),
+            Modifier.padding(horizontal = FoodSpacing.inset, vertical = FoodSpacing.small),
+            horizontalArrangement = Arrangement.spacedBy(FoodSpacing.extraSmall),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(Modifier.size(12.dp).background(identityColor, CircleShape))
-            Text(name, style = MaterialTheme.typography.labelLarge)
+            Text(name, style = MaterialTheme.typography.labelMedium)
         }
     }
 }

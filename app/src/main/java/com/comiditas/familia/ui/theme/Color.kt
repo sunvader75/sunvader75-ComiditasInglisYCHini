@@ -10,19 +10,38 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
-// Brand colors are independent of the persisted member identity palette below.
-val Cream = Color(0xFFFFF8F1)
-val WarmWhite = Color(0xFFFFFCF8)
-val Terracotta = Color(0xFF9C452E)
-val Peach = Color(0xFFFFDBCE)
-val Cocoa = Color(0xFF342820)
-val MutedCocoa = Color(0xFF68584D)
-val Olive = Color(0xFF53613D)
-val PaleOlive = Color(0xFFE0E8CC)
-val WarmBorder = Color(0xFF89786C)
-val SoftBorder = Color(0xFFE4D5C8)
-val WarmError = Color(0xFFB3261E)
+// Brand roles are independent of the persisted member identity palette below.
+// Pale containers use dark text instead of the reference's mixed dark/pale roles.
+val Iris = Color(0xFF4E378A)
+val LilacCanvas = Color(0xFFFEF7FF)
+val Lavender = Color(0xFFE8DDFF)
+val OnLavender = Color(0xFF21005D)
+val NeutralInk = Color(0xFF1D1A23)
+val NeutralSlate = Color(0xFF494551)
+val SlateLavender = Color(0xFF625B71)
+val SecondaryLavender = Color(0xFFE8DEF9)
+val OnSecondaryLavender = Color(0xFF1E192B)
+val DustyRose = Color(0xFF633B48)
+val PaleRose = Color(0xFFFFD9E3)
+val OnPaleRose = Color(0xFF31111D)
+val NeutralOutline = Color(0xFF7A7582)
+val LavenderOutline = Color(0xFFCAC4D2)
+val ErrorRed = Color(0xFFBA1A1A)
 val PaleError = Color(0xFFFFDAD6)
+val OnPaleError = Color(0xFF93000A)
+
+// Retain the existing public token names for callers; the theme uses role names.
+val Cream = LilacCanvas
+val WarmWhite = Color.White
+val Terracotta = Iris
+val Peach = Lavender
+val Cocoa = NeutralInk
+val MutedCocoa = NeutralSlate
+val Olive = SlateLavender
+val PaleOlive = SecondaryLavender
+val WarmBorder = NeutralOutline
+val SoftBorder = LavenderOutline
+val WarmError = ErrorRed
 
 val MemberColors = listOf(
     Color(0xFFE57373), // Rojo
